@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pcp_frontend/sizes.dart';
 import 'package:pcp_frontend/types.dart';
 
 void main() {
@@ -75,7 +76,7 @@ class Leaderboard extends StatelessWidget {
     return Card(
       child: Column(
         children: [
-          const SizedBox(height: 12.0),
+          const SizedBox(height: PadSize.medium),
           Text(
             "Leaderboard",
             style: Theme.of(context).textTheme.titleLarge,
@@ -111,7 +112,7 @@ class Activities extends StatelessWidget {
     return Card(
       child: Column(
         children: [
-          const SizedBox(height: 12.0),
+          const SizedBox(height: PadSize.medium),
           Text(
             "Activities",
             style: Theme.of(context).textTheme.titleLarge,
@@ -156,6 +157,7 @@ class _CredentialsFormState extends State<CredentialsForm> {
               labelText: 'Username',
             ),
           ),
+          const SizedBox(height: PadSize.small),
           TextField(
             controller: password,
             obscureText: true,
@@ -165,6 +167,7 @@ class _CredentialsFormState extends State<CredentialsForm> {
               labelText: 'Password',
             ),
           ),
+          const SizedBox(height: PadSize.small),
           ElevatedButton(
             onPressed: () {},
             child: const Text('Submit'),
