@@ -27,9 +27,11 @@ class UserCreate extends _UserBase {
 class Activity {
   const Activity({
     required this.user,
-    required this.description,
+    required this.targetLink,
+    required this.type,
   });
 
   final UserReadBrief user;
-  final String description;
+  final String targetLink;
+  final String type;
 }

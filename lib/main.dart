@@ -34,13 +34,31 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final users = const [
-    UserReadBrief(name: "guitarhero", group: "Cupboard", points: 60),
-    UserReadBrief(name: "De", group: "Kessoku Band", points: 50),
-    UserReadBrief(name: "Fazu", group: "Kessoku Band", points: 40),
-    UserReadBrief(name: "No", group: "Kessoku Band", points: 30),
-    UserReadBrief(name: "Hikari", group: "Kessoku Band", points: 20),
-    UserReadBrief(name: "Kakinarase", group: "Kessoku Band", points: 10),
+  static const users = [
+    UserReadBrief(name: 'guitarhero', group: 'Cupboard', points: 60),
+    UserReadBrief(name: 'De', group: 'Kessoku Band', points: 50),
+    UserReadBrief(name: 'Fazu', group: 'Kessoku Band', points: 40),
+    UserReadBrief(name: 'No', group: 'Kessoku Band', points: 30),
+    UserReadBrief(name: 'Hikari', group: 'Kessoku Band', points: 20),
+    UserReadBrief(name: 'Kakinarase', group: 'Kessoku Band', points: 10),
+  ];
+
+  final activities = [
+    Activity(
+      user: users[0],
+      targetLink: 'http://localhost:8000/a',
+      type: 'comment',
+    ),
+    Activity(
+      user: users[1],
+      targetLink: 'http://localhost:8000/b',
+      type: 'submit',
+    ),
+    Activity(
+      user: users[2],
+      targetLink: 'http://localhost:8000/b',
+      type: 'submit',
+    ),
   ];
 
   @override
@@ -55,9 +73,13 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Leaderboard(users: users),
-              const Activities(),
+              const SizedBox(height: PadSize.large),
+              const Leaderboard(users: users),
+              const SizedBox(height: PadSize.large),
+              Activities(activities: activities),
+              const SizedBox(height: PadSize.large),
               const CredentialsForm(),
+              const SizedBox(height: PadSize.large),
             ],
           ),
         ),
@@ -78,11 +100,11 @@ class Leaderboard extends StatelessWidget {
         children: [
           const SizedBox(height: PadSize.medium),
           Text(
-            "Leaderboard",
+            'Leaderboard',
             style: Theme.of(context).textTheme.titleLarge,
           ),
           DataTable(
-            columns: ["Name", "Group", "Points"]
+            columns: ['Name', 'Group', 'Points']
                 .map((columnTitle) => DataColumn(
                       label: Text(
                         columnTitle,
@@ -105,19 +127,46 @@ class Leaderboard extends StatelessWidget {
 }
 
 class Activities extends StatelessWidget {
-  const Activities({super.key});
+  const Activities({super.key, required this.activities});
+
+  final List<Activity> activities;
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Column(
-        children: [
-          const SizedBox(height: PadSize.medium),
-          Text(
-            "Activities",
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-        ],
+      child: IntrinsicWidth(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: PadSize.medium),
+            Text(
+              'Activities',
+              style: Theme.of(context).textTheme.titleLarge,
+              textAlign: TextAlign.center,
+            ),
+            ...activities.map((activity) => Padding(
+                  padding: const EdgeInsets.all(PadSize.small),
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(PadSize.small),
+                      child: Text.rich(TextSpan(
+                        children: [
+                          TextSpan(
+                            text: '${activity.user.name} ',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          TextSpan(
+                            text:
+                                '${activity.type == 'comment' ? 'commented on' : 'submitted'} ',
+                          ),
+                          TextSpan(text: activity.targetLink),
+                        ],
+                      )),
+                    ),
+                  ),
+                )),
+          ],
+        ),
       ),
     );
   }
