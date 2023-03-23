@@ -35,3 +35,17 @@ class Activity {
   final String targetLink;
   final String type;
 }
+
+class Challenge {
+  const Challenge({
+    required this.author,
+    required this.title,
+    required this.tier,
+    required this.supportedLanguages,
+  });
+
+  final UserReadBrief author;
+  final String title;
+  final int tier;
+  final List<String> supportedLanguages;
+}

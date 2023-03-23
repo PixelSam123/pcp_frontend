@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pcp_frontend/components.dart';
 import 'package:pcp_frontend/sizes.dart';
 import 'package:pcp_frontend/types.dart';
 
@@ -14,10 +15,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      builder: (context, child) => MediaQuery(
+        data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+        child: child!,
+      ),
       title: title,
       theme: ThemeData(
         brightness: Brightness.dark,
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.teal,
       ),
       home: MyHomePage(title: title),
     );
@@ -61,6 +66,15 @@ class _MyHomePageState extends State<MyHomePage> {
     ),
   ];
 
+  final challenges = [
+    Challenge(
+      author: users[0],
+      title: "You, you <color>, <color> is no",
+      tier: 1,
+      supportedLanguages: ["js"],
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,6 +93,8 @@ class _MyHomePageState extends State<MyHomePage> {
               Activities(activities: activities),
               const SizedBox(height: PadSize.large),
               const CredentialsForm(),
+              const SizedBox(height: PadSize.large),
+              Challenges(challenges: challenges),
               const SizedBox(height: PadSize.large),
             ],
           ),
@@ -139,17 +155,7 @@ class Activities extends StatelessWidget {
           padding: const EdgeInsets.all(PadSize.small),
           child: Row(
             children: [
-              Tooltip(
-                message: 'Group: ${activity.user.group}\n'
-                    'Points: ${activity.user.points}',
-                child: TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    activity.user.name,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
+              UserButton(user: activity.user),
               Text(activity.type == 'comment' ? 'commented on' : 'submitted'),
               TextButton(
                 onPressed: () {},
@@ -233,6 +239,58 @@ class _CredentialsFormState extends State<CredentialsForm> {
             child: const Text('Submit'),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class Challenges extends StatelessWidget {
+  const Challenges({super.key, required this.challenges});
+
+  final List<Challenge> challenges;
+
+  Widget _buildChallenge(Challenge challenge) {
+    return Padding(
+      padding: const EdgeInsets.all(PadSize.small),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(PadSize.small),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                challenge.title,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              UserButton(user: challenge.author),
+              const SizedBox(height: PadSize.small),
+              OutlinedButton(
+                onPressed: () {},
+                child: const Text('View'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: IntrinsicWidth(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: PadSize.medium),
+            Text(
+              'Challenges',
+              style: Theme.of(context).textTheme.titleLarge,
+              textAlign: TextAlign.center,
+            ),
+            ...challenges.map(_buildChallenge),
+          ],
+        ),
       ),
     );
   }
