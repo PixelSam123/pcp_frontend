@@ -131,6 +131,41 @@ class Activities extends StatelessWidget {
 
   final List<Activity> activities;
 
+  Widget _buildActivity(Activity activity) {
+    return Padding(
+      padding: const EdgeInsets.all(PadSize.small),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(PadSize.small),
+          child: Row(
+            children: [
+              Tooltip(
+                message: 'Group: ${activity.user.group}\n'
+                    'Points: ${activity.user.points}',
+                child: TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    activity.user.name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              Text(
+                activity.type == 'comment' ? 'commented on' : 'submitted',
+              ),
+              TextButton(
+                onPressed: () {},
+                child: Text(activity.targetLink),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -144,40 +179,7 @@ class Activities extends StatelessWidget {
               style: Theme.of(context).textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),
-            ...activities.map((activity) => Padding(
-                  padding: const EdgeInsets.all(PadSize.small),
-                  child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(PadSize.small),
-                      child: Row(
-                        children: [
-                          Tooltip(
-                            message: 'Group: ${activity.user.group}\n'
-                                'Points: ${activity.user.points}',
-                            child: TextButton(
-                              onPressed: () {},
-                              child: Text(
-                                activity.user.name,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Text(
-                            activity.type == 'comment'
-                                ? 'commented on'
-                                : 'submitted',
-                          ),
-                          TextButton(
-                            onPressed: () {},
-                            child: Text(activity.targetLink),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                )),
+            ...activities.map(_buildActivity),
           ],
         ),
       ),
