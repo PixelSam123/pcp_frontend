@@ -249,7 +249,7 @@ class Challenges extends StatelessWidget {
 
   final List<Challenge> challenges;
 
-  Widget _buildChallenge(Challenge challenge) {
+  Widget _buildChallenge(BuildContext context, Challenge challenge) {
     return Padding(
       padding: const EdgeInsets.all(PadSize.small),
       child: Card(
@@ -260,9 +260,16 @@ class Challenges extends StatelessWidget {
             children: [
               Text(
                 challenge.title,
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.titleMedium,
               ),
-              UserButton(user: challenge.author),
+              Row(children: [
+                const Icon(Icons.person),
+                UserButton(user: challenge.author),
+              ]),
+              Row(children: [
+                const Icon(Icons.code),
+                Text(challenge.supportedLanguages.join(", ")),
+              ]),
               const SizedBox(height: PadSize.small),
               OutlinedButton(
                 onPressed: () {},
@@ -288,7 +295,9 @@ class Challenges extends StatelessWidget {
               style: Theme.of(context).textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),
-            ...challenges.map(_buildChallenge),
+            ...challenges.map(
+              (challenge) => _buildChallenge(context, challenge),
+            ),
           ],
         ),
       ),
