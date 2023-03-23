@@ -146,15 +146,11 @@ class Activities extends StatelessWidget {
                   onPressed: () {},
                   child: Text(
                     activity.user.name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
-              Text(
-                activity.type == 'comment' ? 'commented on' : 'submitted',
-              ),
+              Text(activity.type == 'comment' ? 'commented on' : 'submitted'),
               TextButton(
                 onPressed: () {},
                 child: Text(activity.targetLink),
