@@ -149,19 +149,32 @@ class Activities extends StatelessWidget {
                   child: Card(
                     child: Padding(
                       padding: const EdgeInsets.all(PadSize.small),
-                      child: Text.rich(TextSpan(
+                      child: Row(
                         children: [
-                          TextSpan(
-                            text: '${activity.user.name} ',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          Tooltip(
+                            message: 'Group: ${activity.user.group}\n'
+                                'Points: ${activity.user.points}',
+                            child: TextButton(
+                              onPressed: () {},
+                              child: Text(
+                                activity.user.name,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                           ),
-                          TextSpan(
-                            text:
-                                '${activity.type == 'comment' ? 'commented on' : 'submitted'} ',
+                          Text(
+                            activity.type == 'comment'
+                                ? 'commented on'
+                                : 'submitted',
                           ),
-                          TextSpan(text: activity.targetLink),
+                          TextButton(
+                            onPressed: () {},
+                            child: Text(activity.targetLink),
+                          ),
                         ],
-                      )),
+                      ),
                     ),
                   ),
                 )),
