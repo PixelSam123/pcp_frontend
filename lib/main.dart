@@ -69,9 +69,9 @@ class _MyHomePageState extends State<MyHomePage> {
   final challenges = [
     Challenge(
       author: users[0],
-      title: "You, you <color>, <color> is no",
+      title: 'You, you <color>, <color> is no',
       tier: 1,
-      supportedLanguages: ["js"],
+      supportedLanguages: ['js'],
     ),
   ];
 
@@ -268,7 +268,7 @@ class Challenges extends StatelessWidget {
               ]),
               Row(children: [
                 const Icon(Icons.code),
-                Text(challenge.supportedLanguages.join(", ")),
+                Text(challenge.supportedLanguages.join(', ')),
               ]),
               const SizedBox(height: PadSize.small),
               OutlinedButton(
