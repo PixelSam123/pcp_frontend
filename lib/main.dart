@@ -262,14 +262,17 @@ class Activities extends StatelessWidget {
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(PadSize.small),
-          child: Row(children: [
-            UserButton(user: activity.user),
-            Text(activity.type == 'comment' ? 'commented on' : 'submitted'),
-            TextButton(
-              onPressed: () {},
-              child: Text(activity.targetLink),
-            ),
-          ]),
+          child: Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              UserButton(user: activity.user),
+              Text(activity.type == 'comment' ? 'commented on' : 'submitted'),
+              TextButton(
+                onPressed: () {},
+                child: Text(activity.targetLink),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -372,24 +375,36 @@ class Challenges extends StatelessWidget {
                 challenge.title,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
-              Row(children: [
-                Row(children: [
-                  const Icon(Icons.person),
-                  UserButton(user: challenge.author),
-                ]),
-                const SizedBox(width: PadSize.large),
-                Row(children: [
-                  const Icon(Icons.change_history),
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.person),
+                      UserButton(user: challenge.author),
+                    ],
+                  ),
                   const SizedBox(width: PadSize.small),
-                  Text('Tier ${challenge.tier}'),
-                ]),
-                const SizedBox(width: PadSize.large),
-                Row(children: [
-                  const Icon(Icons.code),
-                  const SizedBox(width: PadSize.small),
-                  Text(challenge.supportedLanguages.join(', ')),
-                ]),
-              ]),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.change_history),
+                      const SizedBox(width: PadSize.small),
+                      Text('Tier ${challenge.tier}'),
+                    ],
+                  ),
+                  const SizedBox(width: PadSize.large),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.code),
+                      const SizedBox(width: PadSize.small),
+                      Text(challenge.supportedLanguages.join(', ')),
+                    ],
+                  ),
+                ],
+              ),
               const SizedBox(height: PadSize.small),
               OutlinedButton(
                 onPressed: () => Navigator.of(context).push(
