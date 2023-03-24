@@ -160,6 +160,16 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   @override
+  Future<void> dispose() async {
+    final prefs = await SharedPreferences.getInstance();
+    final appSettings = MyApp.settings;
+
+    await prefs.setBool('isDarkMode', appSettings.value.isDarkMode);
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
