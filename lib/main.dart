@@ -41,7 +41,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: MyApp.settings,
-      builder: (context, appSettings, _) {
+      builder: (context, appSettings, child) {
         return MaterialApp(
           builder: (context, child) => MediaQuery(
             data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
@@ -53,9 +53,10 @@ class _MyAppState extends State<MyApp> {
                 appSettings.isDarkMode ? Brightness.dark : Brightness.light,
             primarySwatch: Colors.teal,
           ),
-          home: HomePage(title: widget.title),
+          home: child,
         );
       },
+      child: HomePage(title: widget.title),
     );
   }
 }
