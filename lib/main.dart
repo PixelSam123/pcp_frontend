@@ -377,7 +377,11 @@ class Challenges extends StatelessWidget {
               ]),
               const SizedBox(height: PadSize.small),
               OutlinedButton(
-                onPressed: () {},
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const ChallengePage(),
+                  ),
+                ),
                 child: const Text('View'),
               ),
             ],
@@ -406,6 +410,20 @@ class Challenges extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class ChallengePage extends StatelessWidget {
+  const ChallengePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Challenge #1')),
+      body: Column(children: const [
+        Text('Challenge page\nPretend this is a nice description'),
+      ]),
     );
   }
 }
