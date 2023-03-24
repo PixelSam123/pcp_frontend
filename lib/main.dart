@@ -160,13 +160,16 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   @override
-  Future<void> dispose() async {
+  void dispose() {
+    _saveAppSettings();
+    super.dispose();
+  }
+
+  Future<void> _saveAppSettings() async {
     final prefs = await SharedPreferences.getInstance();
     final appSettings = MyApp.settings;
 
     await prefs.setBool('isDarkMode', appSettings.value.isDarkMode);
-
-    super.dispose();
   }
 
   @override
@@ -355,12 +358,22 @@ class Challenges extends StatelessWidget {
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               Row(children: [
-                const Icon(Icons.person),
-                UserButton(user: challenge.author),
-              ]),
-              Row(children: [
-                const Icon(Icons.code),
-                Text(challenge.supportedLanguages.join(', ')),
+                Row(children: [
+                  const Icon(Icons.person),
+                  UserButton(user: challenge.author),
+                ]),
+                const SizedBox(width: PadSize.large),
+                Row(children: [
+                  const Icon(Icons.change_history),
+                  const SizedBox(width: PadSize.small),
+                  Text('Tier ${challenge.tier}'),
+                ]),
+                const SizedBox(width: PadSize.large),
+                Row(children: [
+                  const Icon(Icons.code),
+                  const SizedBox(width: PadSize.small),
+                  Text(challenge.supportedLanguages.join(', ')),
+                ]),
               ]),
               const SizedBox(height: PadSize.small),
               OutlinedButton(
