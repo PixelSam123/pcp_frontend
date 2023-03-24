@@ -1,3 +1,11 @@
+class AppSettings {
+  AppSettings({
+    required this.isDarkMode,
+  });
+
+  bool isDarkMode;
+}
+
 abstract class _UserBase {
   const _UserBase({required this.name});
 
