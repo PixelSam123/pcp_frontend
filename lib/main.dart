@@ -43,6 +43,7 @@ class _MyAppState extends State<MyApp> {
       valueListenable: MyApp.settings,
       builder: (context, appSettings, child) {
         return MaterialApp(
+          debugShowCheckedModeBanner: false,
           builder: (context, child) => MediaQuery(
             data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
             child: child!,
@@ -118,6 +119,20 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget._title),
+        actions: [
+          PopupMenuButton(itemBuilder: (context) {
+            return const [
+              PopupMenuItem(
+                value: 'settings',
+                child: Text('Settings'),
+              ),
+            ];
+          }, onSelected: (value) {
+            if (value == 'settings') {
+              _openSettingsPage(context);
+            }
+          }),
+        ],
       ),
       body: SingleChildScrollView(
         child: SizedBox(
