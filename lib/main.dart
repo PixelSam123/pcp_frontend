@@ -106,6 +106,12 @@ class _HomePageState extends State<HomePage> {
       tier: 1,
       supportedLanguages: ['js'],
     ),
+    Challenge(
+      author: users[5],
+      title: 'Indonesian, Korean, English',
+      tier: 2,
+      supportedLanguages: ['js'],
+    ),
   ];
 
   void _openSettingsPage(BuildContext context) {
