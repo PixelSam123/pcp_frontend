@@ -121,6 +121,12 @@ class _HomePageState extends State<HomePage> {
     ),
   ];
 
+  void _openProfilePage(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const ProfilePage()),
+    );
+  }
+
   void _openSettingsPage(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => const SettingsPage()),
@@ -136,13 +142,22 @@ class _HomePageState extends State<HomePage> {
           PopupMenuButton(itemBuilder: (context) {
             return const [
               PopupMenuItem(
+                value: 'profile',
+                child: Text('Profile'),
+              ),
+              PopupMenuItem(
                 value: 'settings',
                 child: Text('Settings'),
               ),
             ];
           }, onSelected: (value) {
-            if (value == 'settings') {
-              _openSettingsPage(context);
+            switch (value) {
+              case 'profile':
+                _openProfilePage(context);
+                break;
+              case 'settings':
+                _openSettingsPage(context);
+                break;
             }
           }),
         ],
@@ -153,6 +168,11 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const SizedBox(height: PadSize.large),
+              OutlinedButton(
+                onPressed: () => _openProfilePage(context),
+                child: const Text('Open Profile page'),
+              ),
               const SizedBox(height: PadSize.large),
               OutlinedButton(
                 onPressed: () => _openSettingsPage(context),
@@ -171,6 +191,25 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Profile')),
+      body: Column(children: const [
+        Text('hi profile page'),
+      ]),
     );
   }
 }
@@ -203,9 +242,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
+      appBar: AppBar(title: const Text('Settings')),
       body: Column(children: [
         Row(children: [
           const Text('Dark mode'),
