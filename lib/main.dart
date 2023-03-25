@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_code_editor/flutter_code_editor.dart';
+import 'package:flutter_highlight/themes/ocean.dart';
+import 'package:highlight/languages/javascript.dart';
 import 'package:pcp_frontend/components.dart';
 import 'package:pcp_frontend/sizes.dart';
 import 'package:pcp_frontend/types.dart';
@@ -454,15 +457,41 @@ class Challenges extends StatelessWidget {
   }
 }
 
-class ChallengePage extends StatelessWidget {
+class ChallengePage extends StatefulWidget {
   const ChallengePage({super.key});
+
+  @override
+  State<ChallengePage> createState() => _ChallengePageState();
+}
+
+class _ChallengePageState extends State<ChallengePage> {
+  final controller = CodeController(
+    text: 'print("Hello, world!")',
+    language: javascript,
+  );
+
+  @override
+  void dispose() {
+    controller.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Challenge #1')),
-      body: Column(children: const [
-        Text('Challenge page\nPretend this is a nice description'),
+      body: Column(children: [
+        const Text('Challenge page\nPretend this is a nice description'),
+        CodeTheme(
+          data: CodeThemeData(styles: oceanTheme),
+          child: SingleChildScrollView(
+            child: CodeField(
+              controller: controller,
+              textStyle: const TextStyle(fontFamily: 'monospace'),
+            ),
+          ),
+        ),
       ]),
     );
   }
