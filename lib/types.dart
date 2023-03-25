@@ -14,20 +14,33 @@ abstract class _UserBase {
 
 class UserReadBrief extends _UserBase {
   const UserReadBrief({
-    required String name,
+    required super.name,
     required this.group,
     required this.points,
-  }) : super(name: name);
+  });
 
   final String group;
   final int points;
 }
 
+class UserRead extends UserReadBrief {
+  UserRead({
+    required super.name,
+    required super.group,
+    required super.points,
+    required this.completedChallengesCount,
+    required this.rank,
+  });
+
+  final int completedChallengesCount;
+  final int rank;
+}
+
 class UserCreate extends _UserBase {
   const UserCreate({
-    required String name,
+    required super.name,
     required this.password,
-  }) : super(name: name);
+  });
 
   final String password;
 }
