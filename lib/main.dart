@@ -488,7 +488,10 @@ class _ChallengePageState extends State<ChallengePage> {
           child: SingleChildScrollView(
             child: CodeField(
               controller: controller,
-              textStyle: const TextStyle(fontFamily: 'monospace'),
+              textStyle: const TextStyle(
+                fontFamily: 'monospace',
+                fontFamilyFallback: ['Consolas'],
+              ),
             ),
           ),
         ),
