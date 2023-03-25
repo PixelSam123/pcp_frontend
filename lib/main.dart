@@ -13,7 +13,7 @@ class MyApp extends StatefulWidget {
 
   final title = 'Pixel Code Platform';
 
-  static late final ValueNotifier<AppSettings> settings;
+  static final ValueNotifier<AppSettings?> settings = ValueNotifier(null);
 
   @override
   State<StatefulWidget> createState() => _MyAppState();
@@ -33,7 +33,7 @@ class _MyAppState extends State<MyApp> {
     );
 
     setState(() {
-      MyApp.settings = ValueNotifier(appSettings);
+      MyApp.settings.value = appSettings;
     });
   }
 
@@ -42,6 +42,10 @@ class _MyAppState extends State<MyApp> {
     return ValueListenableBuilder(
       valueListenable: MyApp.settings,
       builder: (context, appSettings, child) {
+        if (appSettings == null) {
+          return const SizedBox();
+        }
+
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           builder: (context, child) => MediaQuery(
@@ -190,7 +194,7 @@ class _SettingsPageState extends State<SettingsPage> {
     final prefs = await SharedPreferences.getInstance();
     final appSettings = MyApp.settings;
 
-    await prefs.setBool('isDarkMode', appSettings.value.isDarkMode);
+    await prefs.setBool('isDarkMode', appSettings.value!.isDarkMode);
   }
 
   @override
@@ -205,7 +209,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ValueListenableBuilder(
             valueListenable: MyApp.settings,
             builder: (context, appSettings, _) => Switch(
-              value: appSettings.isDarkMode,
+              value: appSettings!.isDarkMode,
               onChanged: setIsDarkMode,
             ),
           ),
