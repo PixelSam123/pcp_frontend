@@ -1,13 +1,3 @@
-class AppSettings {
-  const AppSettings({
-    required this.isDarkMode,
-    required this.serverUrl,
-  });
-
-  final bool isDarkMode;
-  final String serverUrl;
-}
-
 abstract class _UserBase {
   const _UserBase({required this.name});
 

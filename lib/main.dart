@@ -5,65 +5,89 @@ import 'package:highlight/languages/javascript.dart';
 import 'package:pcp_frontend/components.dart';
 import 'package:pcp_frontend/sizes.dart';
 import 'package:pcp_frontend/types.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+class AppSettings with ChangeNotifier {
+  AppSettings._create({
+    required SharedPreferences prefs,
+    required bool isDarkMode,
+    required String serverUrl,
+  })  : _prefs = prefs,
+        _isDarkMode = isDarkMode,
+        _serverUrl = serverUrl;
+
+  final SharedPreferences _prefs;
+  bool _isDarkMode;
+  String _serverUrl;
+
+  static Future<AppSettings> load() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    return AppSettings._create(
+      prefs: prefs,
+      isDarkMode: prefs.getBool('isDarkMode') ?? true,
+      serverUrl: prefs.getString('serverUrl') ?? 'http://localhost:8000',
+    );
+  }
+
+  bool get isDarkMode => _isDarkMode;
+  set isDarkMode(bool isDarkMode) {
+    _isDarkMode = isDarkMode;
+    notifyListeners();
+    _prefs.setBool('isDarkMode', _isDarkMode);
+  }
+
+  String get serverUrl => _serverUrl;
+  set serverUrl(String serverUrl) {
+    _serverUrl = serverUrl;
+    notifyListeners();
+    _prefs.setString('serverUrl', _serverUrl);
+  }
+}
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   final title = 'Pixel Code Platform';
 
-  static final ValueNotifier<AppSettings?> settings = ValueNotifier(null);
-
-  @override
-  State<StatefulWidget> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-    _loadAppSettings();
-  }
-
-  Future<void> _loadAppSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    final appSettings = AppSettings(
-      isDarkMode: prefs.getBool('isDarkMode') ?? true,
-      serverUrl: prefs.getString('serverUrl') ?? 'http://localhost:8000',
-    );
-
-    MyApp.settings.value = appSettings;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: MyApp.settings,
-      builder: (context, appSettings, child) {
-        if (appSettings == null) {
+    return FutureBuilder(
+      future: AppSettings.load(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
           return const SizedBox();
         }
 
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          builder: (context, child) => MediaQuery(
-            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-            child: child!,
+        return ChangeNotifierProvider(
+          create: (context) => snapshot.data!,
+          child: Consumer<AppSettings>(
+            builder: (context, appSettings, child) {
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                builder: (context, child) => MediaQuery(
+                  data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+                  child: child!,
+                ),
+                title: title,
+                theme: ThemeData(
+                  brightness: appSettings.isDarkMode
+                      ? Brightness.dark
+                      : Brightness.light,
+                  primarySwatch: Colors.teal,
+                ),
+                home: child,
+              );
+            },
+            child: HomePage(title: title),
           ),
-          title: widget.title,
-          theme: ThemeData(
-            brightness:
-                appSettings.isDarkMode ? Brightness.dark : Brightness.light,
-            primarySwatch: Colors.teal,
-          ),
-          home: child,
         );
       },
-      child: HomePage(title: widget.title),
     );
   }
 }
@@ -221,66 +245,56 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  final _serverUrl = TextEditingController(
-    text: MyApp.settings.value!.serverUrl,
-  );
+  final _serverUrl = TextEditingController();
 
-  void _setIsDarkMode(bool value) {
-    setState(() {
-      MyApp.settings.value = AppSettings(
-        isDarkMode: value,
-        serverUrl: MyApp.settings.value!.serverUrl,
-      );
-    });
+  void _setIsDarkMode(AppSettings appSettings, bool value) {
+    appSettings.isDarkMode = value;
   }
 
-  void _setServerUrl(String value) {
-    setState(() {
-      MyApp.settings.value = AppSettings(
-        isDarkMode: MyApp.settings.value!.isDarkMode,
-        serverUrl: value,
-      );
-    });
+  void _setServerUrl(AppSettings appSettings, String value) {
+    appSettings.serverUrl = value;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _serverUrl.text = context.read<AppSettings>().serverUrl;
   }
 
   @override
   void dispose() {
-    _saveAppSettings();
     _serverUrl.dispose();
 
     super.dispose();
-  }
-
-  Future<void> _saveAppSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    final appSettings = MyApp.settings;
-
-    await prefs.setBool('isDarkMode', appSettings.value!.isDarkMode);
-    await prefs.setString('serverUrl', appSettings.value!.serverUrl);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
-      body: Column(children: [
-        Row(children: [
-          const Text('Dark mode'),
-          Switch(
-            value: MyApp.settings.value!.isDarkMode,
-            onChanged: _setIsDarkMode,
-          ),
-        ]),
-        TextField(
-          controller: _serverUrl,
-          onChanged: _setServerUrl,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            isDense: true,
-            labelText: 'Server URL',
-          ),
-        ),
-      ]),
+      body: Consumer<AppSettings>(
+        builder: (context, appSettings, child) {
+          return Column(children: [
+            Row(children: [
+              const Text('Dark mode'),
+              Switch(
+                value: appSettings.isDarkMode,
+                onChanged: (value) => _setIsDarkMode(appSettings, value),
+              ),
+            ]),
+            TextField(
+              controller: _serverUrl,
+              onChanged: (value) => _setServerUrl(appSettings, value),
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                isDense: true,
+                labelText: 'Server URL',
+              ),
+            ),
+          ]);
+        },
+      ),
     );
   }
 }
