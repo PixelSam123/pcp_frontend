@@ -221,6 +221,10 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  final _serverUrl = TextEditingController(
+    text: MyApp.settings.value!.serverUrl,
+  );
+
   void _setIsDarkMode(bool value) {
     setState(() {
       MyApp.settings.value = AppSettings(
@@ -242,6 +246,8 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void dispose() {
     _saveAppSettings();
+    _serverUrl.dispose();
+
     super.dispose();
   }
 
@@ -266,6 +272,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         ]),
         TextField(
+          controller: _serverUrl,
           onChanged: _setServerUrl,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
