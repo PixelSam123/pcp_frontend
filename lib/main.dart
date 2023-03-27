@@ -33,11 +33,10 @@ class _MyAppState extends State<MyApp> {
     final prefs = await SharedPreferences.getInstance();
     final appSettings = AppSettings(
       isDarkMode: prefs.getBool('isDarkMode') ?? true,
+      serverUrl: prefs.getString('serverUrl') ?? 'http://localhost:8000',
     );
 
-    setState(() {
-      MyApp.settings.value = appSettings;
-    });
+    MyApp.settings.value = appSettings;
   }
 
   @override
@@ -222,8 +221,22 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  void setIsDarkMode(bool value) {
-    MyApp.settings.value = AppSettings(isDarkMode: value);
+  void _setIsDarkMode(bool value) {
+    setState(() {
+      MyApp.settings.value = AppSettings(
+        isDarkMode: value,
+        serverUrl: MyApp.settings.value!.serverUrl,
+      );
+    });
+  }
+
+  void _setServerUrl(String value) {
+    setState(() {
+      MyApp.settings.value = AppSettings(
+        isDarkMode: MyApp.settings.value!.isDarkMode,
+        serverUrl: value,
+      );
+    });
   }
 
   @override
@@ -237,6 +250,7 @@ class _SettingsPageState extends State<SettingsPage> {
     final appSettings = MyApp.settings;
 
     await prefs.setBool('isDarkMode', appSettings.value!.isDarkMode);
+    await prefs.setString('serverUrl', appSettings.value!.serverUrl);
   }
 
   @override
@@ -246,14 +260,19 @@ class _SettingsPageState extends State<SettingsPage> {
       body: Column(children: [
         Row(children: [
           const Text('Dark mode'),
-          ValueListenableBuilder(
-            valueListenable: MyApp.settings,
-            builder: (context, appSettings, _) => Switch(
-              value: appSettings!.isDarkMode,
-              onChanged: setIsDarkMode,
-            ),
+          Switch(
+            value: MyApp.settings.value!.isDarkMode,
+            onChanged: _setIsDarkMode,
           ),
         ]),
+        TextField(
+          onChanged: _setServerUrl,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            isDense: true,
+            labelText: 'Server URL',
+          ),
+        ),
       ]),
     );
   }
