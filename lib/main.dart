@@ -134,13 +134,13 @@ class _HomePageState extends State<HomePage> {
       author: users[0],
       title: 'You, you <color>, <color> is no',
       tier: 1,
-      supportedLanguages: ['js'],
+      a: ['js'],
     ),
     Challenge(
       author: users[5],
       title: 'Indonesian, Korean, English',
       tier: 2,
-      supportedLanguages: ['js'],
+      a: ['js'],
     ),
   ];
 
@@ -490,7 +490,7 @@ class Challenges extends StatelessWidget {
                     children: [
                       const Icon(Icons.code),
                       const SizedBox(width: PadSize.small),
-                      Text(challenge.supportedLanguages.join(', ')),
+                      Text(challenge.a.join(', ')),
                     ],
                   ),
                 ],
