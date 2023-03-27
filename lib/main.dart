@@ -554,24 +554,47 @@ class _ChallengePageState extends State<ChallengePage> {
     super.dispose();
   }
 
+  void _openSubmissionsPage(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const SubmissionsPage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Challenge #1')),
       body: Column(children: [
         const Text('Challenge page\nPretend this is a nice description'),
+        OutlinedButton(
+          onPressed: () => _openSubmissionsPage(context),
+          child: const Text('Open Submissions page'),
+        ),
         CodeTheme(
           data: CodeThemeData(styles: oceanTheme),
-          child: SingleChildScrollView(
-            child: CodeField(
-              controller: controller,
-              textStyle: const TextStyle(
-                fontFamily: 'monospace',
-                fontFamilyFallback: ['Consolas'],
-              ),
+          child: CodeField(
+            controller: controller,
+            textStyle: const TextStyle(
+              fontFamily: 'monospace',
+              fontFamilyFallback: ['Consolas'],
             ),
           ),
         ),
+      ]),
+    );
+  }
+}
+
+class SubmissionsPage extends StatelessWidget {
+  const SubmissionsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Submissions C #1')),
+      body: Column(children: const [
+        Text('hi i am a line'),
+        Text('me too'),
       ]),
     );
   }

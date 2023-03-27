@@ -62,3 +62,13 @@ class Challenge {
   final int tier;
   final List<String> supportedLanguages;
 }
+
+class Submission {
+  const Submission({
+    required this.user,
+    required this.content,
+  });
+
+  final UserReadBrief user;
+  final String content;
+}
