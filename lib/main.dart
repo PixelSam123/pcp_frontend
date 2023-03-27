@@ -13,13 +13,16 @@ class AppSettings with ChangeNotifier {
     required SharedPreferences prefs,
     required bool isDarkMode,
     required String serverUrl,
+    required double textScale,
   })  : _prefs = prefs,
         _isDarkMode = isDarkMode,
-        _serverUrl = serverUrl;
+        _serverUrl = serverUrl,
+        _textScale = textScale;
 
   final SharedPreferences _prefs;
   bool _isDarkMode;
   String _serverUrl;
+  double _textScale;
 
   static Future<AppSettings> load() async {
     final prefs = await SharedPreferences.getInstance();
@@ -28,6 +31,7 @@ class AppSettings with ChangeNotifier {
       prefs: prefs,
       isDarkMode: prefs.getBool('isDarkMode') ?? true,
       serverUrl: prefs.getString('serverUrl') ?? 'http://localhost:8000',
+      textScale: prefs.getDouble('textScale') ?? 1.0,
     );
   }
 
@@ -43,6 +47,13 @@ class AppSettings with ChangeNotifier {
     _serverUrl = serverUrl;
     notifyListeners();
     _prefs.setString('serverUrl', _serverUrl);
+  }
+
+  double get textScale => _textScale;
+  set textScale(double textScale) {
+    _textScale = textScale;
+    notifyListeners();
+    _prefs.setDouble('textScale', _textScale);
   }
 }
 
@@ -71,7 +82,9 @@ class MyApp extends StatelessWidget {
               return MaterialApp(
                 debugShowCheckedModeBanner: false,
                 builder: (context, child) => MediaQuery(
-                  data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+                  data: MediaQuery.of(context).copyWith(
+                    textScaleFactor: appSettings.textScale,
+                  ),
                   child: child!,
                 ),
                 title: title,
@@ -246,6 +259,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   final _serverUrl = TextEditingController();
+  final _textScale = TextEditingController();
 
   void _setIsDarkMode(AppSettings appSettings, bool value) {
     appSettings.isDarkMode = value;
@@ -255,11 +269,17 @@ class _SettingsPageState extends State<SettingsPage> {
     appSettings.serverUrl = value;
   }
 
+  void _setTextScale(AppSettings appSettings, String value) {
+    appSettings.textScale = double.parse(value);
+  }
+
   @override
   void initState() {
     super.initState();
 
-    _serverUrl.text = context.read<AppSettings>().serverUrl;
+    final currentAppSettings = context.read<AppSettings>();
+    _serverUrl.text = currentAppSettings.serverUrl;
+    _textScale.text = currentAppSettings.textScale.toString();
   }
 
   @override
@@ -283,6 +303,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 onChanged: (value) => _setIsDarkMode(appSettings, value),
               ),
             ]),
+            const SizedBox(height: PadSize.small),
             TextField(
               controller: _serverUrl,
               onChanged: (value) => _setServerUrl(appSettings, value),
@@ -290,6 +311,16 @@ class _SettingsPageState extends State<SettingsPage> {
                 border: OutlineInputBorder(),
                 isDense: true,
                 labelText: 'Server URL',
+              ),
+            ),
+            const SizedBox(height: PadSize.small),
+            TextField(
+              controller: _textScale,
+              onChanged: (value) => _setTextScale(appSettings, value),
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                isDense: true,
+                labelText: 'Text Scale',
               ),
             ),
           ]);
