@@ -5,65 +5,92 @@ import 'package:highlight/languages/javascript.dart';
 import 'package:pcp_frontend/components.dart';
 import 'package:pcp_frontend/sizes.dart';
 import 'package:pcp_frontend/types.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+class AppSettings with ChangeNotifier {
+  AppSettings._create({
+    required SharedPreferences prefs,
+    required bool isDarkMode,
+    required String serverUrl,
+  })  : _prefs = prefs,
+        _isDarkMode = isDarkMode,
+        _serverUrl = serverUrl;
+
+  final SharedPreferences _prefs;
+  bool _isDarkMode;
+  String _serverUrl;
+
+  static Future<AppSettings> load() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    return AppSettings._create(
+      prefs: prefs,
+      isDarkMode: prefs.getBool('isDarkMode') ?? true,
+      serverUrl: prefs.getString('serverUrl') ?? 'http://localhost:8000',
+    );
+  }
+
+  Future<void> save() async {
+    await _prefs.setBool('isDarkMode', _isDarkMode);
+    await _prefs.setString('serverUrl', _serverUrl);
+  }
+
+  bool get isDarkMode => _isDarkMode;
+  set isDarkMode(bool isDarkMode) {
+    _isDarkMode = isDarkMode;
+    notifyListeners();
+  }
+
+  String get serverUrl => _serverUrl;
+  set serverUrl(String serverUrl) {
+    _serverUrl = serverUrl;
+    notifyListeners();
+  }
+}
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   final title = 'Pixel Code Platform';
 
-  static final ValueNotifier<AppSettings?> settings = ValueNotifier(null);
-
-  @override
-  State<StatefulWidget> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-    _loadAppSettings();
-  }
-
-  Future<void> _loadAppSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    final appSettings = AppSettings(
-      isDarkMode: prefs.getBool('isDarkMode') ?? true,
-      serverUrl: prefs.getString('serverUrl') ?? 'http://localhost:8000',
-    );
-
-    MyApp.settings.value = appSettings;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: MyApp.settings,
-      builder: (context, appSettings, child) {
-        if (appSettings == null) {
+    return FutureBuilder(
+      future: AppSettings.load(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
           return const SizedBox();
         }
 
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          builder: (context, child) => MediaQuery(
-            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-            child: child!,
+        return ChangeNotifierProvider(
+          create: (context) => snapshot.data!,
+          child: Consumer<AppSettings>(
+            builder: (context, appSettings, child) {
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                builder: (context, child) => MediaQuery(
+                  data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+                  child: child!,
+                ),
+                title: title,
+                theme: ThemeData(
+                  brightness: appSettings.isDarkMode
+                      ? Brightness.dark
+                      : Brightness.light,
+                  primarySwatch: Colors.teal,
+                ),
+                home: child,
+              );
+            },
+            child: HomePage(title: title),
           ),
-          title: widget.title,
-          theme: ThemeData(
-            brightness:
-                appSettings.isDarkMode ? Brightness.dark : Brightness.light,
-            primarySwatch: Colors.teal,
-          ),
-          home: child,
         );
       },
-      child: HomePage(title: widget.title),
     );
   }
 }
@@ -110,13 +137,13 @@ class _HomePageState extends State<HomePage> {
       author: users[0],
       title: 'You, you <color>, <color> is no',
       tier: 1,
-      supportedLanguages: ['js'],
+      a: ['js'],
     ),
     Challenge(
       author: users[5],
       title: 'Indonesian, Korean, English',
       tier: 2,
-      supportedLanguages: ['js'],
+      a: ['js'],
     ),
   ];
 
@@ -476,7 +503,7 @@ class Challenges extends StatelessWidget {
                     children: [
                       const Icon(Icons.code),
                       const SizedBox(width: PadSize.small),
-                      Text(challenge.supportedLanguages.join(', ')),
+                      Text(challenge.a.join(', ')),
                     ],
                   ),
                 ],
