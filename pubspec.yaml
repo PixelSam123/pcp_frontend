@@ -32,12 +32,13 @@ dependencies:
     sdk: flutter
 
 
-  flutter_code_editor: ^0.2.13
+  flutter_code_editor: ^0.2.18
   flutter_highlight: ^0.7.0
   flutter_markdown: ^0.6.14
+  go_router: ^6.5.7
   highlight: ^0.7.0
   provider: ^6.0.5
-  shared_preferences: ^2.0.20
+  shared_preferences: ^2.1.0
 
 dev_dependencies:
   flutter_test:
