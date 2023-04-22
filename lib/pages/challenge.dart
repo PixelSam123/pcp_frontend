@@ -60,26 +60,24 @@ class _ChallengePageState extends State<ChallengePage> {
             return const Text('Loading challenge information...');
           }
 
-          return ChallengeView(challenge: snapshot.data!);
+          return _ChallengeView(challenge: snapshot.data!);
         },
       ),
     );
   }
 }
 
-class ChallengeView extends StatefulWidget {
-  const ChallengeView({
-    super.key,
-    required ChallengeRead challenge,
-  }) : _challenge = challenge;
+class _ChallengeView extends StatefulWidget {
+  const _ChallengeView({required ChallengeRead challenge})
+      : _challenge = challenge;
 
   final ChallengeRead _challenge;
 
   @override
-  State<ChallengeView> createState() => _ChallengeViewState();
+  State<_ChallengeView> createState() => _ChallengeViewState();
 }
 
-class _ChallengeViewState extends State<ChallengeView> {
+class _ChallengeViewState extends State<_ChallengeView> {
   final _codeToSubmit = CodeController(language: javascript);
 
   void _openSubmissionsPage(BuildContext context) {

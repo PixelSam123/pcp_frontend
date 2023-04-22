@@ -89,11 +89,11 @@ class _HomePageState extends State<HomePage> {
                 return const Text('Loading users...');
               }
 
-              return Leaderboard(users: snapshot.data!);
+              return _Leaderboard(users: snapshot.data!);
             },
           ),
           const SizedBox(height: PadSize.lg),
-          const CredentialsForm(),
+          const _CredentialsForm(),
           const SizedBox(height: PadSize.lg),
           FutureBuilder(
             future: _challenges,
@@ -105,7 +105,7 @@ class _HomePageState extends State<HomePage> {
                 return const Text('Loading challenges...');
               }
 
-              return Challenges(challenges: snapshot.data!);
+              return _Challenges(challenges: snapshot.data!);
             },
           ),
           const SizedBox(height: PadSize.lg),
@@ -115,11 +115,8 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class Leaderboard extends StatelessWidget {
-  const Leaderboard({
-    super.key,
-    required List<UserReadBrief> users,
-  }) : _users = users;
+class _Leaderboard extends StatelessWidget {
+  const _Leaderboard({required List<UserReadBrief> users}) : _users = users;
 
   final List<UserReadBrief> _users;
 
@@ -158,14 +155,14 @@ class Leaderboard extends StatelessWidget {
   }
 }
 
-class CredentialsForm extends StatefulWidget {
-  const CredentialsForm({super.key});
+class _CredentialsForm extends StatefulWidget {
+  const _CredentialsForm();
 
   @override
-  State<CredentialsForm> createState() => _CredentialsFormState();
+  State<_CredentialsForm> createState() => _CredentialsFormState();
 }
 
-class _CredentialsFormState extends State<CredentialsForm> {
+class _CredentialsFormState extends State<_CredentialsForm> {
   final _username = TextEditingController();
   final _password = TextEditingController();
 
@@ -213,11 +210,9 @@ class _CredentialsFormState extends State<CredentialsForm> {
   }
 }
 
-class Challenges extends StatelessWidget {
-  const Challenges({
-    super.key,
-    required List<ChallengeReadBrief> challenges,
-  }) : _challenges = challenges;
+class _Challenges extends StatelessWidget {
+  const _Challenges({required List<ChallengeReadBrief> challenges})
+      : _challenges = challenges;
 
   final List<ChallengeReadBrief> _challenges;
 
