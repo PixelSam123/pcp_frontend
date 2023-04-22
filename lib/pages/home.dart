@@ -130,7 +130,7 @@ class _Leaderboard extends StatelessWidget {
           style: Theme.of(context).textTheme.titleLarge,
         ),
         DataTable(
-          columns: ['Name', 'Group']
+          columns: ['Name', 'Group', 'Points']
               .map(
                 (columnTitle) => DataColumn(
                   label: Text(
@@ -143,7 +143,7 @@ class _Leaderboard extends StatelessWidget {
           rows: _users
               .map(
                 (user) => DataRow(
-                  cells: [user.name, user.group]
+                  cells: [user.name, user.group, user.points]
                       .map((field) => DataCell(Text(field.toString())))
                       .toList(),
                 ),
