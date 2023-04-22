@@ -28,8 +28,11 @@ final _router = GoRouter(routes: [
     builder: (context, state) => SettingsPage(key: state.pageKey),
   ),
   GoRoute(
-    path: '/challenges',
-    builder: (context, state) => ChallengePage(key: state.pageKey),
+    path: '/challenge/:challengeName',
+    builder: (context, state) => ChallengePage(
+      key: state.pageKey,
+      challengeName: state.params['challengeName']!,
+    ),
   ),
   GoRoute(
     path: '/submissions',

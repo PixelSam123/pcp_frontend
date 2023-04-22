@@ -221,8 +221,8 @@ class Challenges extends StatelessWidget {
 
   final List<ChallengeReadBrief> _challenges;
 
-  void _openChallengePage(BuildContext context) {
-    context.go('/challenges');
+  void _openChallengePage(BuildContext context, String challengeName) {
+    context.go('/challenge/$challengeName');
   }
 
   Widget _buildChallenge(BuildContext context, ChallengeReadBrief challenge) {
@@ -273,7 +273,7 @@ class Challenges extends StatelessWidget {
               ),
               const SizedBox(height: PadSize.sm),
               OutlinedButton(
-                onPressed: () => _openChallengePage(context),
+                onPressed: () => _openChallengePage(context, challenge.name),
                 child: const Text('View'),
               ),
             ],
