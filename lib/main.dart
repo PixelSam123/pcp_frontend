@@ -46,31 +46,31 @@ class MyApp extends StatelessWidget {
       future: AppSettings.load(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return const SizedBox();
+          return const Directionality(
+            textDirection: TextDirection.ltr,
+            child: Center(child: Text('Loading app settings...')),
+          );
         }
 
         return ChangeNotifierProvider(
           create: (context) => snapshot.data!,
-          child: Consumer<AppSettings>(
-            builder: (context, appSettings, child) {
-              return MaterialApp.router(
-                debugShowCheckedModeBanner: false,
-                builder: (context, child) => MediaQuery(
-                  data: MediaQuery.of(context).copyWith(
-                    textScaleFactor: appSettings.textScale,
-                  ),
-                  child: child!,
+          child: Consumer<AppSettings>(builder: (context, appSettings, child) {
+            return MaterialApp.router(
+              debugShowCheckedModeBanner: false,
+              builder: (context, child) => MediaQuery(
+                data: MediaQuery.of(context).copyWith(
+                  textScaleFactor: appSettings.textScale,
                 ),
-                theme: ThemeData(
-                  brightness: appSettings.isDarkMode
-                      ? Brightness.dark
-                      : Brightness.light,
-                  primarySwatch: Colors.teal,
-                ),
-                routerConfig: _router,
-              );
-            },
-          ),
+                child: child!,
+              ),
+              theme: ThemeData(
+                brightness:
+                    appSettings.isDarkMode ? Brightness.dark : Brightness.light,
+                primarySwatch: Colors.teal,
+              ),
+              routerConfig: _router,
+            );
+          }),
         );
       },
     );

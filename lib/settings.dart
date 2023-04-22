@@ -29,22 +29,22 @@ class AppSettings with ChangeNotifier {
   }
 
   bool get isDarkMode => _isDarkMode;
-  set isDarkMode(bool isDarkMode) {
-    _isDarkMode = isDarkMode;
+  set isDarkMode(bool value) {
+    _isDarkMode = value;
     notifyListeners();
     _prefs.setBool('isDarkMode', _isDarkMode);
   }
 
   String get serverUrl => _serverUrl;
-  set serverUrl(String serverUrl) {
-    _serverUrl = serverUrl;
+  set serverUrl(String value) {
+    _serverUrl = value;
     notifyListeners();
     _prefs.setString('serverUrl', _serverUrl);
   }
 
   double get textScale => _textScale;
-  set textScale(double textScale) {
-    _textScale = textScale;
+  set textScale(double value) {
+    _textScale = value;
     notifyListeners();
     _prefs.setDouble('textScale', _textScale);
   }

@@ -1,5 +1,5 @@
 class PadSize {
-  static const small = 8.0;
-  static const medium = 12.0;
-  static const large = 16.0;
+  static const sm = 8.0;
+  static const md = 12.0;
+  static const lg = 16.0;
 }

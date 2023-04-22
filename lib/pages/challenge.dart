@@ -13,20 +13,20 @@ class ChallengePage extends StatefulWidget {
 }
 
 class _ChallengePageState extends State<ChallengePage> {
-  final controller = CodeController(
-    text: 'print("Hello, world!")',
+  final _codeToSubmit = CodeController(
+    text: 'console.log(\'hello world\')',
     language: javascript,
   );
 
-  @override
-  void dispose() {
-    controller.dispose();
-
-    super.dispose();
-  }
-
   void _openSubmissionsPage(BuildContext context) {
     context.go('/submissions');
+  }
+
+  @override
+  void dispose() {
+    _codeToSubmit.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -42,7 +42,7 @@ class _ChallengePageState extends State<ChallengePage> {
         CodeTheme(
           data: CodeThemeData(styles: oceanTheme),
           child: CodeField(
-            controller: controller,
+            controller: _codeToSubmit,
             textStyle: const TextStyle(
               fontFamily: 'monospace',
               fontFamilyFallback: ['Consolas'],

@@ -47,39 +47,37 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return PageLayout(
       title: 'Settings',
-      child: Consumer<AppSettings>(
-        builder: (context, appSettings, child) {
-          return Column(children: [
-            Row(children: [
-              const Text('Dark mode'),
-              Switch(
-                value: appSettings.isDarkMode,
-                onChanged: (value) => _setIsDarkMode(appSettings, value),
-              ),
-            ]),
-            const SizedBox(height: PadSize.small),
-            TextField(
-              controller: _serverUrl,
-              onChanged: (value) => _setServerUrl(appSettings, value),
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                isDense: true,
-                labelText: 'Server URL',
-              ),
+      child: Consumer<AppSettings>(builder: (context, appSettings, child) {
+        return Column(children: [
+          Row(children: [
+            const Text('Dark mode'),
+            Switch(
+              value: appSettings.isDarkMode,
+              onChanged: (value) => _setIsDarkMode(appSettings, value),
             ),
-            const SizedBox(height: PadSize.small),
-            TextField(
-              controller: _textScale,
-              onChanged: (value) => _setTextScale(appSettings, value),
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                isDense: true,
-                labelText: 'Text Scale',
-              ),
+          ]),
+          const SizedBox(height: PadSize.sm),
+          TextField(
+            controller: _serverUrl,
+            onChanged: (value) => _setServerUrl(appSettings, value),
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              isDense: true,
+              labelText: 'Server URL',
             ),
-          ]);
-        },
-      ),
+          ),
+          const SizedBox(height: PadSize.md),
+          TextField(
+            controller: _textScale,
+            onChanged: (value) => _setTextScale(appSettings, value),
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              isDense: true,
+              labelText: 'Text Scale',
+            ),
+          ),
+        ]);
+      }),
     );
   }
 }

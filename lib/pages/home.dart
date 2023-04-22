@@ -12,7 +12,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static const users = [
+  static const _users = [
     UserReadBrief(name: 'guitarhero', group: 'Cupboard', points: 60),
     UserReadBrief(name: 'De', group: 'Kessoku Band', points: 50),
     UserReadBrief(name: 'Fazu', group: 'Kessoku Band', points: 40),
@@ -21,33 +21,33 @@ class _HomePageState extends State<HomePage> {
     UserReadBrief(name: 'Kakinarase', group: 'Kessoku Band', points: 10),
   ];
 
-  final activities = [
+  final _activities = [
     Activity(
-      user: users[0],
+      user: _users[0],
       targetLink: 'http://localhost:8000/a',
       type: 'comment',
     ),
     Activity(
-      user: users[1],
+      user: _users[1],
       targetLink: 'http://localhost:8000/b',
       type: 'submit',
     ),
     Activity(
-      user: users[2],
+      user: _users[2],
       targetLink: 'http://localhost:8000/b',
       type: 'submit',
     ),
   ];
 
-  final challenges = [
+  final _challenges = [
     Challenge(
-      author: users[0],
+      author: _users[0],
       title: 'You, you <color>, <color> is no',
       tier: 1,
       supportedLanguages: ['js'],
     ),
     Challenge(
-      author: users[5],
+      author: _users[5],
       title: 'Indonesian, Korean, English',
       tier: 2,
       supportedLanguages: ['js'],
@@ -61,15 +61,15 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const SizedBox(height: PadSize.large),
-          const Leaderboard(users: users),
-          const SizedBox(height: PadSize.large),
-          Activities(activities: activities),
-          const SizedBox(height: PadSize.large),
+          const SizedBox(height: PadSize.lg),
+          const Leaderboard(users: _users),
+          const SizedBox(height: PadSize.lg),
+          Activities(activities: _activities),
+          const SizedBox(height: PadSize.lg),
           const CredentialsForm(),
-          const SizedBox(height: PadSize.large),
-          Challenges(challenges: challenges),
-          const SizedBox(height: PadSize.large),
+          const SizedBox(height: PadSize.lg),
+          Challenges(challenges: _challenges),
+          const SizedBox(height: PadSize.lg),
         ],
       ),
     );
@@ -88,26 +88,30 @@ class Leaderboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Column(children: [
-        const SizedBox(height: PadSize.medium),
+        const SizedBox(height: PadSize.md),
         Text(
           'Leaderboard',
           style: Theme.of(context).textTheme.titleLarge,
         ),
         DataTable(
           columns: ['Name', 'Group', 'Points']
-              .map((columnTitle) => DataColumn(
-                    label: Text(
-                      columnTitle,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                  ))
+              .map(
+                (columnTitle) => DataColumn(
+                  label: Text(
+                    columnTitle,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ),
+              )
               .toList(),
           rows: _users
-              .map((user) => DataRow(
-                    cells: [user.name, user.group, user.points]
-                        .map((field) => DataCell(Text(field.toString())))
-                        .toList(),
-                  ))
+              .map(
+                (user) => DataRow(
+                  cells: [user.name, user.group, user.points]
+                      .map((field) => DataCell(Text(field.toString())))
+                      .toList(),
+                ),
+              )
               .toList(),
         ),
       ]),
@@ -125,14 +129,17 @@ class Activities extends StatelessWidget {
 
   Widget _buildActivity(Activity activity) {
     return Padding(
-      padding: const EdgeInsets.all(PadSize.small),
+      padding: const EdgeInsets.all(PadSize.sm),
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.all(PadSize.small),
+          padding: const EdgeInsets.all(PadSize.sm),
           child: Wrap(
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              UserButton(user: activity.user),
+              UserButton(
+                user: activity.user,
+                onPressed: () {},
+              ),
               Text(activity.type == 'comment' ? 'commented on' : 'submitted'),
               TextButton(
                 onPressed: () {},
@@ -152,7 +159,7 @@ class Activities extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: PadSize.medium),
+            const SizedBox(height: PadSize.md),
             Text(
               'Activities',
               style: Theme.of(context).textTheme.titleLarge,
@@ -200,7 +207,7 @@ class _CredentialsFormState extends State<CredentialsForm> {
               labelText: 'Username',
             ),
           ),
-          const SizedBox(height: PadSize.small),
+          const SizedBox(height: PadSize.md),
           TextField(
             controller: _password,
             obscureText: true,
@@ -210,7 +217,7 @@ class _CredentialsFormState extends State<CredentialsForm> {
               labelText: 'Password',
             ),
           ),
-          const SizedBox(height: PadSize.small),
+          const SizedBox(height: PadSize.md),
           ElevatedButton(
             onPressed: () {},
             child: const Text('Submit'),
@@ -235,10 +242,10 @@ class Challenges extends StatelessWidget {
 
   Widget _buildChallenge(BuildContext context, Challenge challenge) {
     return Padding(
-      padding: const EdgeInsets.all(PadSize.small),
+      padding: const EdgeInsets.all(PadSize.sm),
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.all(PadSize.small),
+          padding: const EdgeInsets.all(PadSize.sm),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -253,30 +260,33 @@ class Challenges extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(Icons.person),
-                      UserButton(user: challenge.author),
+                      UserButton(
+                        user: challenge.author,
+                        onPressed: () {},
+                      ),
                     ],
                   ),
-                  const SizedBox(width: PadSize.small),
+                  const SizedBox(width: PadSize.sm),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(Icons.change_history),
-                      const SizedBox(width: PadSize.small),
+                      const SizedBox(width: PadSize.sm),
                       Text('Tier ${challenge.tier}'),
                     ],
                   ),
-                  const SizedBox(width: PadSize.large),
+                  const SizedBox(width: PadSize.lg),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(Icons.code),
-                      const SizedBox(width: PadSize.small),
+                      const SizedBox(width: PadSize.sm),
                       Text(challenge.supportedLanguages.join(', ')),
                     ],
                   ),
                 ],
               ),
-              const SizedBox(height: PadSize.small),
+              const SizedBox(height: PadSize.sm),
               OutlinedButton(
                 onPressed: () => _openChallengePage(context),
                 child: const Text('View'),
@@ -295,7 +305,7 @@ class Challenges extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: PadSize.medium),
+            const SizedBox(height: PadSize.md),
             Text(
               'Challenges',
               style: Theme.of(context).textTheme.titleLarge,
