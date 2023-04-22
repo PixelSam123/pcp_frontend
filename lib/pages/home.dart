@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
 import 'package:pcp_frontend/components.dart';
+import 'package:pcp_frontend/settings.dart';
 import 'package:pcp_frontend/sizes.dart';
 import 'package:pcp_frontend/types.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,47 +17,54 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static const _users = [
-    UserReadBrief(name: 'guitarhero', group: 'Cupboard', points: 60),
-    UserReadBrief(name: 'De', group: 'Kessoku Band', points: 50),
-    UserReadBrief(name: 'Fazu', group: 'Kessoku Band', points: 40),
-    UserReadBrief(name: 'No', group: 'Kessoku Band', points: 30),
-    UserReadBrief(name: 'Hikari', group: 'Kessoku Band', points: 20),
-    UserReadBrief(name: 'Kakinarase', group: 'Kessoku Band', points: 10),
-  ];
+  late Future<List<UserReadBrief>> _users;
+  late Future<List<ChallengeReadBrief>> _challenges;
 
-  final _activities = [
-    Activity(
-      user: _users[0],
-      targetLink: 'http://localhost:8000/a',
-      type: 'comment',
-    ),
-    Activity(
-      user: _users[1],
-      targetLink: 'http://localhost:8000/b',
-      type: 'submit',
-    ),
-    Activity(
-      user: _users[2],
-      targetLink: 'http://localhost:8000/b',
-      type: 'submit',
-    ),
-  ];
+  Future<List<UserReadBrief>> _fetchUsers() async {
+    final appSettings = context.read<AppSettings>();
+    final response = await http.get(
+      Uri.parse('${appSettings.serverUrl}/users'),
+    );
 
-  final _challenges = [
-    Challenge(
-      author: _users[0],
-      title: 'You, you <color>, <color> is no',
-      tier: 1,
-      supportedLanguages: ['js'],
-    ),
-    Challenge(
-      author: _users[5],
-      title: 'Indonesian, Korean, English',
-      tier: 2,
-      supportedLanguages: ['js'],
-    ),
-  ];
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body)
+          .map<UserReadBrief>((user) => UserReadBrief.fromJson(user))
+          .toList();
+    } else {
+      throw Exception('Failed to load users');
+    }
+  }
+
+  Future<List<ChallengeReadBrief>> _fetchChallenges() async {
+    final appSettings = context.read<AppSettings>();
+    final response = await http.get(
+      Uri.parse('${appSettings.serverUrl}/challenges'),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body)
+          .map<ChallengeReadBrief>(
+            (challenge) => ChallengeReadBrief.fromJson(challenge),
+          )
+          .toList();
+    } else {
+      throw Exception('Failed to load challenges');
+    }
+  }
+
+  void _refreshServerData() {
+    setState(() {
+      _users = _fetchUsers();
+      _challenges = _fetchChallenges();
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _refreshServerData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,14 +73,41 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          const SizedBox(height: PadSize.md),
+          OutlinedButton(
+            onPressed: _refreshServerData,
+            child: const Text('Refresh server data'),
+          ),
           const SizedBox(height: PadSize.lg),
-          const Leaderboard(users: _users),
-          const SizedBox(height: PadSize.lg),
-          Activities(activities: _activities),
+          FutureBuilder(
+            future: _users,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Text(snapshot.error.toString());
+              }
+              if (!snapshot.hasData) {
+                return const Text('Loading users...');
+              }
+
+              return Leaderboard(users: snapshot.data!);
+            },
+          ),
           const SizedBox(height: PadSize.lg),
           const CredentialsForm(),
           const SizedBox(height: PadSize.lg),
-          Challenges(challenges: _challenges),
+          FutureBuilder(
+            future: _challenges,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Text(snapshot.error.toString());
+              }
+              if (!snapshot.hasData) {
+                return const Text('Loading challenges...');
+              }
+
+              return Challenges(challenges: snapshot.data!);
+            },
+          ),
           const SizedBox(height: PadSize.lg),
         ],
       ),
@@ -94,7 +133,7 @@ class Leaderboard extends StatelessWidget {
           style: Theme.of(context).textTheme.titleLarge,
         ),
         DataTable(
-          columns: ['Name', 'Group', 'Points']
+          columns: ['Name', 'Group']
               .map(
                 (columnTitle) => DataColumn(
                   label: Text(
@@ -107,7 +146,7 @@ class Leaderboard extends StatelessWidget {
           rows: _users
               .map(
                 (user) => DataRow(
-                  cells: [user.name, user.group, user.points]
+                  cells: [user.name, user.group]
                       .map((field) => DataCell(Text(field.toString())))
                       .toList(),
                 ),
@@ -115,60 +154,6 @@ class Leaderboard extends StatelessWidget {
               .toList(),
         ),
       ]),
-    );
-  }
-}
-
-class Activities extends StatelessWidget {
-  const Activities({
-    super.key,
-    required List<Activity> activities,
-  }) : _activities = activities;
-
-  final List<Activity> _activities;
-
-  Widget _buildActivity(Activity activity) {
-    return Padding(
-      padding: const EdgeInsets.all(PadSize.sm),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(PadSize.sm),
-          child: Wrap(
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              UserButton(
-                user: activity.user,
-                onPressed: () {},
-              ),
-              Text(activity.type == 'comment' ? 'commented on' : 'submitted'),
-              TextButton(
-                onPressed: () {},
-                child: Text(activity.targetLink),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: IntrinsicWidth(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox(height: PadSize.md),
-            Text(
-              'Activities',
-              style: Theme.of(context).textTheme.titleLarge,
-              textAlign: TextAlign.center,
-            ),
-            ..._activities.map(_buildActivity),
-          ],
-        ),
-      ),
     );
   }
 }
@@ -231,16 +216,16 @@ class _CredentialsFormState extends State<CredentialsForm> {
 class Challenges extends StatelessWidget {
   const Challenges({
     super.key,
-    required List<Challenge> challenges,
+    required List<ChallengeReadBrief> challenges,
   }) : _challenges = challenges;
 
-  final List<Challenge> _challenges;
+  final List<ChallengeReadBrief> _challenges;
 
   void _openChallengePage(BuildContext context) {
     context.go('/challenges');
   }
 
-  Widget _buildChallenge(BuildContext context, Challenge challenge) {
+  Widget _buildChallenge(BuildContext context, ChallengeReadBrief challenge) {
     return Padding(
       padding: const EdgeInsets.all(PadSize.sm),
       child: Card(
@@ -250,7 +235,7 @@ class Challenges extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                challenge.title,
+                challenge.name,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               Wrap(
@@ -261,7 +246,7 @@ class Challenges extends StatelessWidget {
                     children: [
                       const Icon(Icons.person),
                       UserButton(
-                        user: challenge.author,
+                        user: challenge.user,
                         onPressed: () {},
                       ),
                     ],
@@ -278,10 +263,10 @@ class Challenges extends StatelessWidget {
                   const SizedBox(width: PadSize.lg),
                   Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.code),
-                      const SizedBox(width: PadSize.sm),
-                      Text(challenge.supportedLanguages.join(', ')),
+                    children: const [
+                      Icon(Icons.code),
+                      SizedBox(width: PadSize.sm),
+                      Text('js'),
                     ],
                   ),
                 ],

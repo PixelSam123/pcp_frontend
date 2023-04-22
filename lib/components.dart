@@ -17,8 +17,7 @@ class UserButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Tooltip(
-      message: 'Group: ${_user.group}\n'
-          'Points: ${_user.points}',
+      message: 'Group: ${_user.group?.name ?? 'None'}',
       child: TextButton(
         onPressed: _onPressed,
         child: Text(
