@@ -3,6 +3,7 @@ import 'package:flutter_code_editor/flutter_code_editor.dart';
 import 'package:flutter_highlight/themes/ocean.dart';
 import 'package:go_router/go_router.dart';
 import 'package:highlight/languages/javascript.dart';
+import 'package:pcp_frontend/components.dart';
 
 class ChallengePage extends StatefulWidget {
   const ChallengePage({super.key});
@@ -30,9 +31,9 @@ class _ChallengePageState extends State<ChallengePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Challenge #1')),
-      body: Column(children: [
+    return PageLayout(
+      title: 'Challenge #1',
+      child: Column(children: [
         const Text('Challenge page\nPretend this is a nice description'),
         OutlinedButton(
           onPressed: () => _openSubmissionsPage(context),

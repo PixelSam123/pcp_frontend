@@ -54,61 +54,23 @@ class _HomePageState extends State<HomePage> {
     ),
   ];
 
-  void _openProfilePage(BuildContext context) {
-    context.go('/profile');
-  }
-
-  void _openSettingsPage(BuildContext context) {
-    context.go('/settings');
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Pixel Code Platform'),
-        actions: [
-          PopupMenuButton(itemBuilder: (context) {
-            return const [
-              PopupMenuItem(
-                value: 'profile',
-                child: Text('Profile'),
-              ),
-              PopupMenuItem(
-                value: 'settings',
-                child: Text('Settings'),
-              ),
-            ];
-          }, onSelected: (value) {
-            switch (value) {
-              case 'profile':
-                _openProfilePage(context);
-                break;
-              case 'settings':
-                _openSettingsPage(context);
-                break;
-            }
-          }),
+    return PageLayout(
+      title: 'Pixel Code Platform',
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(height: PadSize.large),
+          const Leaderboard(users: users),
+          const SizedBox(height: PadSize.large),
+          Activities(activities: activities),
+          const SizedBox(height: PadSize.large),
+          const CredentialsForm(),
+          const SizedBox(height: PadSize.large),
+          Challenges(challenges: challenges),
+          const SizedBox(height: PadSize.large),
         ],
-      ),
-      body: SingleChildScrollView(
-        child: SizedBox(
-          width: double.infinity,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: PadSize.large),
-              const Leaderboard(users: users),
-              const SizedBox(height: PadSize.large),
-              Activities(activities: activities),
-              const SizedBox(height: PadSize.large),
-              const CredentialsForm(),
-              const SizedBox(height: PadSize.large),
-              Challenges(challenges: challenges),
-              const SizedBox(height: PadSize.large),
-            ],
-          ),
-        ),
       ),
     );
   }

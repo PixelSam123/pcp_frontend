@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pcp_frontend/components.dart';
 import 'package:pcp_frontend/settings.dart';
 import 'package:pcp_frontend/sizes.dart';
 import 'package:provider/provider.dart';
@@ -44,9 +45,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
-      body: Consumer<AppSettings>(
+    return PageLayout(
+      title: 'Settings',
+      child: Consumer<AppSettings>(
         builder: (context, appSettings, child) {
           return Column(children: [
             Row(children: [

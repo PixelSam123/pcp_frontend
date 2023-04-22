@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pcp_frontend/components.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -10,9 +11,9 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
-      body: Column(children: const [
+    return PageLayout(
+      title: 'Profile',
+      child: Column(children: const [
         Text('hi profile page'),
       ]),
     );
