@@ -35,8 +35,11 @@ final _router = GoRouter(routes: [
     ),
   ),
   GoRoute(
-    path: '/submissions',
-    builder: (context, state) => SubmissionsPage(key: state.pageKey),
+    path: '/submissions/:challengeName',
+    builder: (context, state) => SubmissionsPage(
+      key: state.pageKey,
+      challengeName: state.params['challengeName']!,
+    ),
   ),
 ]);
 

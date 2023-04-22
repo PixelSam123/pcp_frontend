@@ -81,7 +81,7 @@ class _ChallengeViewState extends State<_ChallengeView> {
   final _codeToSubmit = CodeController(language: javascript);
 
   void _openSubmissionsPage(BuildContext context) {
-    context.go('/submissions');
+    context.go('/submissions/${widget._challenge.name}');
   }
 
   @override
