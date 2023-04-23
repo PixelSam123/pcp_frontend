@@ -23,8 +23,13 @@ class ChallengePage extends StatefulWidget {
   State<ChallengePage> createState() => _ChallengePageState();
 }
 
-class _ChallengePageState extends State<ChallengePage> {
+class _ChallengePageState extends State<ChallengePage>
+    with SingleTickerProviderStateMixin {
   late Future<ChallengeRead> _challenge;
+  late Future<List<ChallengeCommentRead>> _comments;
+
+  late TabController _tabController;
+  var _tabIndex = 0;
 
   Future<ChallengeRead> _fetchChallenge() async {
     final appSettings = context.read<AppSettings>();
@@ -39,30 +44,88 @@ class _ChallengePageState extends State<ChallengePage> {
     }
   }
 
+  Future<List<ChallengeCommentRead>> _fetchComments() async {
+    final appSettings = context.read<AppSettings>();
+    final response = await http.get(
+      Uri.parse(
+        '${appSettings.serverUrl}/challenge_comments/'
+        '?challenge_name=${widget._challengeName}',
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body)
+          .map<ChallengeCommentRead>(
+            (comment) => ChallengeCommentRead.fromJson(comment),
+          )
+          .toList();
+    } else {
+      throw Exception('Failed to load challenge comments');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
 
     _challenge = _fetchChallenge();
+    _comments = _fetchComments();
+
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      setState(() {
+        _tabIndex = _tabController.index;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return PageLayout(
       title: widget._challengeName,
-      child: FutureBuilder(
-        future: _challenge,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
-          }
-          if (!snapshot.hasData) {
-            return const Text('Loading challenge information...');
-          }
+      child: Column(children: [
+        TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(text: 'Description'),
+            Tab(text: 'Comments'),
+          ],
+        ),
+        _tabIndex == 0
+            ? FutureBuilder(
+                future: _challenge,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text(snapshot.error.toString());
+                  }
+                  if (!snapshot.hasData) {
+                    return const Text('Loading challenge information...');
+                  }
 
-          return _ChallengeView(challenge: snapshot.data!);
-        },
-      ),
+                  return _ChallengeView(challenge: snapshot.data!);
+                },
+              )
+            : FutureBuilder(
+                future: _comments,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text(snapshot.error.toString());
+                  }
+                  if (!snapshot.hasData) {
+                    return const Text('Loading challenge comments...');
+                  }
+
+                  return _CommentsView(comments: snapshot.data!);
+                },
+              ),
+      ]),
     );
   }
 }
@@ -117,5 +180,31 @@ class _ChallengeViewState extends State<_ChallengeView> {
         ),
       ),
     ]);
+  }
+}
+
+class _CommentsView extends StatelessWidget {
+  const _CommentsView({required List<ChallengeCommentRead> comments})
+      : _comments = comments;
+
+  final List<ChallengeCommentRead> _comments;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: _comments
+          .map(
+            (comment) => Card(
+              child: Column(children: [
+                UserButton(
+                  user: comment.user,
+                  onPressed: () {},
+                ),
+                Text(comment.content),
+              ]),
+            ),
+          )
+          .toList(),
+    );
   }
 }
