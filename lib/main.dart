@@ -5,6 +5,7 @@ import 'package:pcp_frontend/pages/login.dart';
 import 'package:pcp_frontend/secure_storage.dart';
 import 'package:pcp_frontend/settings.dart';
 import 'package:pcp_frontend/pages/challenge.dart';
+import 'package:pcp_frontend/pages/challenge_create.dart';
 import 'package:pcp_frontend/pages/home.dart';
 import 'package:pcp_frontend/pages/profile.dart';
 import 'package:pcp_frontend/pages/settings.dart';
@@ -32,6 +33,10 @@ final _router = GoRouter(routes: [
   GoRoute(
     path: '/login',
     builder: (context, state) => LoginPage(key: state.pageKey),
+  ),
+  GoRoute(
+    path: '/challenge_create',
+    builder: (context, state) => ChallengeCreatePage(key: state.pageKey),
   ),
   GoRoute(
     path: '/challenge/:challengeName',

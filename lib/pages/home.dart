@@ -163,6 +163,10 @@ class _Challenges extends StatelessWidget {
     context.go('/challenge/$challengeName');
   }
 
+  void _openChallengeCreatePage(BuildContext context) {
+    context.go('/challenge_create');
+  }
+
   Widget _buildChallenge(BuildContext context, ChallengeReadBrief challenge) {
     return Padding(
       padding: const EdgeInsets.all(PadSize.sm),
@@ -233,6 +237,11 @@ class _Challenges extends StatelessWidget {
               'Challenges',
               style: Theme.of(context).textTheme.titleLarge,
               textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: PadSize.md),
+            OutlinedButton(
+              onPressed: () => _openChallengeCreatePage(context),
+              child: const Text('Create your own'),
             ),
             ..._challenges
                 .map((challenge) => _buildChallenge(context, challenge)),
