@@ -15,15 +15,18 @@ class _SettingsPageState extends State<SettingsPage> {
   final _serverUrl = TextEditingController();
   final _textScale = TextEditingController();
 
-  void _setIsDarkMode(AppSettings appSettings, bool value) {
+  void _setIsDarkMode(bool value) {
+    final appSettings = context.read<AppSettings>();
     appSettings.isDarkMode = value;
   }
 
-  void _setServerUrl(AppSettings appSettings, String value) {
+  void _setServerUrl(String value) {
+    final appSettings = context.read<AppSettings>();
     appSettings.serverUrl = value;
   }
 
-  void _setTextScale(AppSettings appSettings, String value) {
+  void _setTextScale(String value) {
+    final appSettings = context.read<AppSettings>();
     appSettings.textScale = double.parse(value);
   }
 
@@ -31,9 +34,9 @@ class _SettingsPageState extends State<SettingsPage> {
   void initState() {
     super.initState();
 
-    final currentAppSettings = context.read<AppSettings>();
-    _serverUrl.text = currentAppSettings.serverUrl;
-    _textScale.text = currentAppSettings.textScale.toString();
+    final appSettings = context.read<AppSettings>();
+    _serverUrl.text = appSettings.serverUrl;
+    _textScale.text = appSettings.textScale.toString();
   }
 
   @override
@@ -47,37 +50,35 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return PageLayout(
       title: 'Settings',
-      child: Consumer<AppSettings>(builder: (context, appSettings, child) {
-        return Column(children: [
-          Row(children: [
-            const Text('Dark mode'),
-            Switch(
-              value: appSettings.isDarkMode,
-              onChanged: (value) => _setIsDarkMode(appSettings, value),
-            ),
-          ]),
-          const SizedBox(height: PadSize.sm),
-          TextField(
-            controller: _serverUrl,
-            onChanged: (value) => _setServerUrl(appSettings, value),
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              isDense: true,
-              labelText: 'Server URL',
-            ),
+      child: Column(children: [
+        Row(children: [
+          const Text('Dark mode'),
+          Switch(
+            value: context.select((AppSettings s) => s.isDarkMode),
+            onChanged: _setIsDarkMode,
           ),
-          const SizedBox(height: PadSize.md),
-          TextField(
-            controller: _textScale,
-            onChanged: (value) => _setTextScale(appSettings, value),
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              isDense: true,
-              labelText: 'Text Scale',
-            ),
+        ]),
+        const SizedBox(height: PadSize.sm),
+        TextField(
+          controller: _serverUrl,
+          onChanged: _setServerUrl,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            isDense: true,
+            labelText: 'Server URL',
           ),
-        ]);
-      }),
+        ),
+        const SizedBox(height: PadSize.md),
+        TextField(
+          controller: _textScale,
+          onChanged: _setTextScale,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            isDense: true,
+            labelText: 'Text Scale',
+          ),
+        ),
+      ]),
     );
   }
 }

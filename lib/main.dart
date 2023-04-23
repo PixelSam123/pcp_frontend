@@ -62,23 +62,25 @@ class MyApp extends StatelessWidget {
 
         return ChangeNotifierProvider(
           create: (context) => snapshot.data!,
-          child: Consumer<AppSettings>(builder: (context, appSettings, child) {
+          builder: (context, child) {
             return MaterialApp.router(
               debugShowCheckedModeBanner: false,
               builder: (context, child) => MediaQuery(
                 data: MediaQuery.of(context).copyWith(
-                  textScaleFactor: appSettings.textScale,
+                  textScaleFactor:
+                      context.select((AppSettings s) => s.textScale),
                 ),
                 child: child!,
               ),
               theme: ThemeData(
-                brightness:
-                    appSettings.isDarkMode ? Brightness.dark : Brightness.light,
+                brightness: context.select((AppSettings s) => s.isDarkMode)
+                    ? Brightness.dark
+                    : Brightness.light,
                 primarySwatch: Colors.teal,
               ),
               routerConfig: _router,
             );
-          }),
+          },
         );
       },
     );
