@@ -42,6 +42,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void dispose() {
     _serverUrl.dispose();
+    _textScale.dispose();
 
     super.dispose();
   }
