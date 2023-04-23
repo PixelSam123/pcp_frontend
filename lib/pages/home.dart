@@ -291,9 +291,8 @@ class _Challenges extends StatelessWidget {
               style: Theme.of(context).textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),
-            ..._challenges.map(
-              (challenge) => _buildChallenge(context, challenge),
-            ),
+            ..._challenges
+                .map((challenge) => _buildChallenge(context, challenge)),
           ],
         ),
       ),

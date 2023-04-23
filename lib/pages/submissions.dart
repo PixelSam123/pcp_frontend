@@ -83,9 +83,7 @@ class _SubmissionsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: _submissions
-          .map(
-            (submission) => Text(submission.toString()),
-          )
+          .map((submission) => Text(submission.toString()))
           .toList(),
     );
   }
