@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pcp_frontend/components.dart';
+import 'package:pcp_frontend/secure_storage.dart';
 import 'package:pcp_frontend/settings.dart';
 import 'package:pcp_frontend/types.dart';
 import 'package:provider/provider.dart';
@@ -24,11 +25,13 @@ class _SubmissionsPageState extends State<SubmissionsPage> {
 
   Future<List<SubmissionRead>> _fetchSubmissions() async {
     final appSettings = context.read<AppSettings>();
+    final secureStorage = context.read<SecureStorage>();
     final response = await http.get(
       Uri.parse(
         '${appSettings.serverUrl}/submissions/'
         '?challenge_name=${widget._challengeName}',
       ),
+      headers: {'Authorization': 'Bearer ${secureStorage.loginToken}'},
     );
 
     if (response.statusCode == 200) {
