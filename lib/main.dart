@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 void main() {
   usePathUrlStrategy();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 final _router = GoRouter(routes: [
@@ -44,12 +44,14 @@ final _router = GoRouter(routes: [
 ]);
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  final _appSettings = AppSettings.load();
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: AppSettings.load(),
+      future: _appSettings,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const Directionality(
