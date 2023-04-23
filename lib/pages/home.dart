@@ -93,8 +93,6 @@ class _HomePageState extends State<HomePage> {
             },
           ),
           const SizedBox(height: PadSize.lg),
-          const _CredentialsForm(),
-          const SizedBox(height: PadSize.lg),
           FutureBuilder(
             future: _challenges,
             builder: (context, snapshot) {
@@ -151,61 +149,6 @@ class _Leaderboard extends StatelessWidget {
               .toList(),
         ),
       ]),
-    );
-  }
-}
-
-class _CredentialsForm extends StatefulWidget {
-  const _CredentialsForm();
-
-  @override
-  State<_CredentialsForm> createState() => _CredentialsFormState();
-}
-
-class _CredentialsFormState extends State<_CredentialsForm> {
-  final _username = TextEditingController();
-  final _password = TextEditingController();
-
-  @override
-  void dispose() {
-    _username.dispose();
-    _password.dispose();
-
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 400.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          TextField(
-            controller: _username,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              isDense: true,
-              labelText: 'Username',
-            ),
-          ),
-          const SizedBox(height: PadSize.md),
-          TextField(
-            controller: _password,
-            obscureText: true,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              isDense: true,
-              labelText: 'Password',
-            ),
-          ),
-          const SizedBox(height: PadSize.md),
-          ElevatedButton(
-            onPressed: () {},
-            child: const Text('Submit'),
-          ),
-        ],
-      ),
     );
   }
 }

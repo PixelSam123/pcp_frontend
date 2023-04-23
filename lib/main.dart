@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pcp_frontend/pages/login.dart';
 import 'package:pcp_frontend/secure_storage.dart';
 import 'package:pcp_frontend/settings.dart';
 import 'package:pcp_frontend/pages/challenge.dart';
@@ -27,6 +28,10 @@ final _router = GoRouter(routes: [
   GoRoute(
     path: '/settings',
     builder: (context, state) => SettingsPage(key: state.pageKey),
+  ),
+  GoRoute(
+    path: '/login',
+    builder: (context, state) => LoginPage(key: state.pageKey),
   ),
   GoRoute(
     path: '/challenge/:challengeName',

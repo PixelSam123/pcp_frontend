@@ -52,6 +52,10 @@ class PageLayout extends StatelessWidget {
     context.go('/settings');
   }
 
+  void _openLoginPage(BuildContext context) {
+    context.go('/login');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,6 +77,10 @@ class PageLayout extends StatelessWidget {
                   value: 'settings',
                   child: Text('Settings'),
                 ),
+                PopupMenuItem(
+                  value: 'login',
+                  child: Text('Login'),
+                ),
               ];
             },
             onSelected: (value) {
@@ -85,6 +93,9 @@ class PageLayout extends StatelessWidget {
                   break;
                 case 'settings':
                   _openSettingsPage(context);
+                  break;
+                case 'login':
+                  _openLoginPage(context);
                   break;
               }
             },
