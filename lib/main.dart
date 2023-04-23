@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pcp_frontend/secure_storage.dart';
 import 'package:pcp_frontend/settings.dart';
 import 'package:pcp_frontend/pages/challenge.dart';
 import 'package:pcp_frontend/pages/home.dart';
@@ -46,7 +47,10 @@ final _router = GoRouter(routes: [
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
-  final _appSettings = AppSettings.load();
+  final _appSettings = Future.wait([
+    AppSettings.load(),
+    SecureStorage.load(),
+  ]);
 
   @override
   Widget build(BuildContext context) {
@@ -60,8 +64,15 @@ class MyApp extends StatelessWidget {
           );
         }
 
-        return ChangeNotifierProvider(
-          create: (context) => snapshot.data!,
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (context) => snapshot.data![0] as AppSettings,
+            ),
+            ChangeNotifierProvider(
+              create: (context) => snapshot.data![1] as SecureStorage,
+            ),
+          ],
           builder: (context, child) {
             return MaterialApp.router(
               debugShowCheckedModeBanner: false,
