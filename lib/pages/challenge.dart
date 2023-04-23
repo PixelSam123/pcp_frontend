@@ -6,7 +6,9 @@ import 'package:flutter_highlight/themes/ocean.dart';
 import 'package:go_router/go_router.dart';
 import 'package:highlight/languages/javascript.dart';
 import 'package:pcp_frontend/components.dart';
+import 'package:pcp_frontend/secure_storage.dart';
 import 'package:pcp_frontend/settings.dart';
+import 'package:pcp_frontend/sizes.dart';
 import 'package:pcp_frontend/types.dart';
 import 'package:pcp_frontend/utils.dart';
 import 'package:provider/provider.dart';
@@ -136,8 +138,40 @@ class _ChallengeView extends StatefulWidget {
 class _ChallengeViewState extends State<_ChallengeView> {
   final _codeToSubmit = CodeController(language: javascript);
 
+  Future<SubmissionRead>? _submissionResponse;
+
   void _openSubmissionsPage(BuildContext context) {
     context.go('/submissions/${widget._challenge.name}');
+  }
+
+  Future<SubmissionRead> _postSubmission() async {
+    final appSettings = context.read<AppSettings>();
+    final secureStorage = context.read<SecureStorage>();
+
+    final submissionResponse = await FetchUtils.post(
+      '${appSettings.serverUrl}/submissions/',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${secureStorage.loginToken}',
+      },
+      failMessage: 'Failed to create submission for challenge',
+      body: jsonEncode({
+        'code': _codeToSubmit.text,
+        'result': 'PENDING',
+        'time': 0,
+        'memory': 0,
+        'user_id': secureStorage.userId,
+        'challenge_id': widget._challenge.id,
+      }),
+    );
+
+    return SubmissionRead.fromJson(jsonDecode(submissionResponse));
+  }
+
+  void _sendPostRequest() {
+    setState(() {
+      _submissionResponse = _postSubmission();
+    });
   }
 
   @override
@@ -157,11 +191,14 @@ class _ChallengeViewState extends State<_ChallengeView> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
+      const SizedBox(height: PadSize.md),
       Text(widget._challenge.description),
+      const SizedBox(height: PadSize.md),
       OutlinedButton(
         onPressed: () => _openSubmissionsPage(context),
         child: const Text('Open Submissions page'),
       ),
+      const SizedBox(height: PadSize.md),
       CodeTheme(
         data: CodeThemeData(styles: oceanTheme),
         child: CodeField(
@@ -172,6 +209,29 @@ class _ChallengeViewState extends State<_ChallengeView> {
           ),
         ),
       ),
+      const SizedBox(height: PadSize.md),
+      ElevatedButton(
+        onPressed: _sendPostRequest,
+        child: const Text('Submit'),
+      ),
+      const SizedBox(height: PadSize.md),
+      _submissionResponse == null
+          ? const Text('No submission sent yet')
+          : FutureBuilder(
+              future: _submissionResponse,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text(snapshot.error.toString());
+                }
+                if (!snapshot.hasData) {
+                  return const Text(
+                    'Submitting your attempt for this challenge...',
+                  );
+                }
+
+                return const Text('Successfully created submission!');
+              },
+            ),
     ]);
   }
 }
