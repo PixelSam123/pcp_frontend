@@ -72,6 +72,7 @@ class _SettingsPageState extends State<SettingsPage> {
         const SizedBox(height: PadSize.md),
         TextField(
           controller: _textScale,
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
           onChanged: _setTextScale,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
