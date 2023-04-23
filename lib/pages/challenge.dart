@@ -25,11 +25,11 @@ class ChallengePage extends StatefulWidget {
 
 class _ChallengePageState extends State<ChallengePage>
     with SingleTickerProviderStateMixin {
-  late Future<ChallengeRead> _challenge;
-  late Future<List<ChallengeCommentRead>> _comments;
-
   late TabController _tabController;
   var _tabIndex = 0;
+
+  late Future<ChallengeRead> _challenge;
+  late Future<List<ChallengeCommentRead>> _comments;
 
   Future<ChallengeRead> _fetchChallenge() async {
     final appSettings = context.read<AppSettings>();
