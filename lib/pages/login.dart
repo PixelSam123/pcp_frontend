@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:pcp_frontend/components.dart';
 import 'package:pcp_frontend/secure_storage.dart';
 import 'package:pcp_frontend/settings.dart';
 import 'package:pcp_frontend/sizes.dart';
 import 'package:pcp_frontend/types.dart';
+import 'package:pcp_frontend/utils.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
@@ -52,20 +52,18 @@ class _CredentialsFormState extends State<_CredentialsForm> {
 
   Future<AccessTokenResponse> _fetchToken() async {
     final appSettings = context.read<AppSettings>();
-    final response = await http.post(
-      Uri.parse('${appSettings.serverUrl}/token/'),
+
+    final tokenResponse = await FetchUtils.post(
+      '${appSettings.serverUrl}/token/',
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      failMessage: 'Failed to fetch token (log in)',
       body: {
         'username': _username.text,
         'password': _password.text,
       },
     );
 
-    if (response.statusCode == 200) {
-      return AccessTokenResponse.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to fetch token (log in):\n${response.body}');
-    }
+    return AccessTokenResponse.fromJson(jsonDecode(tokenResponse));
   }
 
   Future<void> _login() async {

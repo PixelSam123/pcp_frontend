@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
 import 'package:pcp_frontend/components.dart';
 import 'package:pcp_frontend/settings.dart';
 import 'package:pcp_frontend/sizes.dart';
 import 'package:pcp_frontend/types.dart';
+import 'package:pcp_frontend/utils.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,34 +22,30 @@ class _HomePageState extends State<HomePage> {
 
   Future<List<UserReadBrief>> _fetchUsers() async {
     final appSettings = context.read<AppSettings>();
-    final response = await http.get(
-      Uri.parse('${appSettings.serverUrl}/users'),
+
+    final users = await FetchUtils.get(
+      '${appSettings.serverUrl}/users',
+      failMessage: 'Failed to load users',
     );
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body)
-          .map<UserReadBrief>((user) => UserReadBrief.fromJson(user))
-          .toList();
-    } else {
-      throw Exception('Failed to load users');
-    }
+    return (jsonDecode(users) as List)
+        .map<UserReadBrief>((user) => UserReadBrief.fromJson(user))
+        .toList();
   }
 
   Future<List<ChallengeReadBrief>> _fetchChallenges() async {
     final appSettings = context.read<AppSettings>();
-    final response = await http.get(
-      Uri.parse('${appSettings.serverUrl}/challenges'),
+
+    final challenges = await FetchUtils.get(
+      '${appSettings.serverUrl}/challenges',
+      failMessage: 'Failed to load challenges',
     );
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body)
-          .map<ChallengeReadBrief>(
-            (challenge) => ChallengeReadBrief.fromJson(challenge),
-          )
-          .toList();
-    } else {
-      throw Exception('Failed to load challenges');
-    }
+    return (jsonDecode(challenges) as List)
+        .map<ChallengeReadBrief>(
+          (challenge) => ChallengeReadBrief.fromJson(challenge),
+        )
+        .toList();
   }
 
   void _refreshServerData() {

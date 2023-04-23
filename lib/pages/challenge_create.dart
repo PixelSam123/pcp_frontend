@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:pcp_frontend/components.dart';
 import 'package:pcp_frontend/secure_storage.dart';
 import 'package:pcp_frontend/settings.dart';
 import 'package:pcp_frontend/sizes.dart';
 import 'package:pcp_frontend/types.dart';
+import 'package:pcp_frontend/utils.dart';
 import 'package:provider/provider.dart';
 
 class ChallengeCreatePage extends StatefulWidget {
@@ -28,12 +28,14 @@ class _ChallengeCreatePageState extends State<ChallengeCreatePage> {
   Future<ChallengeRead> _postChallenge() async {
     final appSettings = context.read<AppSettings>();
     final secureStorage = context.read<SecureStorage>();
-    final response = await http.post(
-      Uri.parse('${appSettings.serverUrl}/challenges/'),
+
+    final challengeResponse = await FetchUtils.post(
+      '${appSettings.serverUrl}/challenges/',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${secureStorage.loginToken}',
       },
+      failMessage: 'Failed to create challenge',
       body: jsonEncode({
         'name': _name.text,
         'tier': _tier.text,
@@ -44,15 +46,7 @@ class _ChallengeCreatePageState extends State<ChallengeCreatePage> {
       }),
     );
 
-    if (response.statusCode == 200) {
-      return ChallengeRead.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception(
-        'Failed to create challenge. '
-        '${response.statusCode} ${response.reasonPhrase}\n'
-        '${response.body}',
-      );
-    }
+    return ChallengeRead.fromJson(jsonDecode(challengeResponse));
   }
 
   void _sendPostRequest() {

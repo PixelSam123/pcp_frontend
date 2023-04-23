@@ -5,10 +5,10 @@ import 'package:flutter_code_editor/flutter_code_editor.dart';
 import 'package:flutter_highlight/themes/ocean.dart';
 import 'package:go_router/go_router.dart';
 import 'package:highlight/languages/javascript.dart';
-import 'package:http/http.dart' as http;
 import 'package:pcp_frontend/components.dart';
 import 'package:pcp_frontend/settings.dart';
 import 'package:pcp_frontend/types.dart';
+import 'package:pcp_frontend/utils.dart';
 import 'package:provider/provider.dart';
 
 class ChallengePage extends StatefulWidget {
@@ -33,35 +33,28 @@ class _ChallengePageState extends State<ChallengePage>
 
   Future<ChallengeRead> _fetchChallenge() async {
     final appSettings = context.read<AppSettings>();
-    final response = await http.get(
-      Uri.parse('${appSettings.serverUrl}/challenges/${widget._challengeName}'),
+
+    final challenge = await FetchUtils.get(
+      '${appSettings.serverUrl}/challenges/${widget._challengeName}',
+      failMessage: 'Failed to load challenge',
     );
 
-    if (response.statusCode == 200) {
-      return ChallengeRead.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to load challenge');
-    }
+    return ChallengeRead.fromJson(jsonDecode(challenge));
   }
 
   Future<List<ChallengeCommentRead>> _fetchComments() async {
     final appSettings = context.read<AppSettings>();
-    final response = await http.get(
-      Uri.parse(
+
+    final comments = await FetchUtils.get(
         '${appSettings.serverUrl}/challenge_comments/'
         '?challenge_name=${widget._challengeName}',
-      ),
-    );
+        failMessage: 'Failed to load challenge comments');
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body)
-          .map<ChallengeCommentRead>(
-            (comment) => ChallengeCommentRead.fromJson(comment),
-          )
-          .toList();
-    } else {
-      throw Exception('Failed to load challenge comments');
-    }
+    return (jsonDecode(comments) as List)
+        .map<ChallengeCommentRead>(
+          (comment) => ChallengeCommentRead.fromJson(comment),
+        )
+        .toList();
   }
 
   @override
