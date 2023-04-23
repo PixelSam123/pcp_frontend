@@ -37,6 +37,7 @@ class _ChallengeCreatePageState extends State<ChallengeCreatePage> {
       body: jsonEncode({
         'name': _name.text,
         'tier': _tier.text,
+        'user_id': secureStorage.userId,
         'description': _description.text,
         'initial_code': _initialCode.text,
         'test_case': _testCase.text,
