@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:pcp_frontend/components.dart';
 import 'package:pcp_frontend/secure_storage.dart';
 import 'package:pcp_frontend/settings.dart';
@@ -74,7 +75,10 @@ class _CredentialsFormState extends State<_CredentialsForm> {
     });
 
     final secureStorage = context.read<SecureStorage>();
-    secureStorage.loginToken = (await token).accessToken;
+    final accessToken = (await token).accessToken;
+
+    secureStorage.loginToken = accessToken;
+    secureStorage.userId = int.parse(JwtDecoder.decode(accessToken)['sub']);
   }
 
   @override
