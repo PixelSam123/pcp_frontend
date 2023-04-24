@@ -31,7 +31,7 @@ class _SubmissionsPageState extends State<SubmissionsPage> {
 
     final submissions = await FetchUtils.get(
       '${appSettings.serverUrl}/submissions/'
-      '?challenge_name=${widget._challengeName.replaceAll(' ', '%20')}',
+      '?challenge_name=${widget._challengeName}',
       headers: {'Authorization': 'Bearer ${secureStorage.loginToken}'},
       failMessage: 'Failed to load submissions for this challenge',
     );

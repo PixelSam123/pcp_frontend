@@ -51,7 +51,7 @@ class _ChallengePageState extends State<ChallengePage>
 
     final comments = await FetchUtils.get(
         '${appSettings.serverUrl}/challenge_comments/'
-        '?challenge_name=${widget._challengeName.replaceAll(' ', '%20')}',
+        '?challenge_name=${widget._challengeName}',
         failMessage: 'Failed to load challenge comments');
 
     return (jsonDecode(comments) as List)
