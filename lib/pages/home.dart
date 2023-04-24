@@ -126,7 +126,7 @@ class _Leaderboard extends StatelessWidget {
           style: Theme.of(context).textTheme.titleLarge,
         ),
         DataTable(
-          columns: ['Name', 'Group', 'Points']
+          columns: ['Rank', 'Name', 'Group', 'Points']
               .map(
                 (columnTitle) => DataColumn(
                   label: Text(
@@ -136,15 +136,20 @@ class _Leaderboard extends StatelessWidget {
                 ),
               )
               .toList(),
-          rows: _users
-              .map(
-                (user) => DataRow(
-                  cells: [user.name, user.group, user.points]
-                      .map((field) => DataCell(Text(field.toString())))
-                      .toList(),
-                ),
-              )
-              .toList(),
+          rows: _users.asMap().entries.map((entry) {
+            final idx = entry.key;
+            final user = entry.value;
+
+            return DataRow(
+              cells: [idx + 1, user.name, user.group, user.points]
+                  .map(
+                    (field) => DataCell(
+                      Text(field != null ? field.toString() : 'None'),
+                    ),
+                  )
+                  .toList(),
+            );
+          }).toList(),
         ),
       ]),
     );
