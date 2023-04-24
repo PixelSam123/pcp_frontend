@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pcp_frontend/sizes.dart';
 import 'package:pcp_frontend/types/user.dart';
 
 class UserButton extends StatelessWidget {
@@ -19,9 +20,16 @@ class UserButton extends StatelessWidget {
           'Points: ${_user.points}',
       child: TextButton(
         onPressed: _onPressed,
-        child: Text(
-          _user.name,
-          style: const TextStyle(fontWeight: FontWeight.bold),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.person),
+            const SizedBox(width: PadSize.sm),
+            Text(
+              _user.name,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
       ),
     );
