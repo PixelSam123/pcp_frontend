@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 
 void main() {
   usePathUrlStrategy();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 final _router = GoRouter(routes: [
@@ -54,9 +54,14 @@ final _router = GoRouter(routes: [
   ),
 ]);
 
-class MyApp extends StatelessWidget {
-  MyApp({super.key});
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   final _appSettings = Future.wait([
     AppSettings.load(),
     SecureStorage.load(),
