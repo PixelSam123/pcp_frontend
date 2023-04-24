@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pcp_frontend/components.dart';
+import 'package:pcp_frontend/components/page_layout.dart';
 import 'package:pcp_frontend/settings.dart';
 import 'package:pcp_frontend/sizes.dart';
 import 'package:provider/provider.dart';

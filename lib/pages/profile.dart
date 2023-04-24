@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pcp_frontend/components.dart';
+import 'package:pcp_frontend/components/page_layout.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});

@@ -2,7 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pcp_frontend/components.dart';
+import 'package:pcp_frontend/components/page_layout.dart';
+import 'package:pcp_frontend/components/user_button.dart';
 import 'package:pcp_frontend/settings.dart';
 import 'package:pcp_frontend/sizes.dart';
 import 'package:pcp_frontend/types/challenge.dart';
