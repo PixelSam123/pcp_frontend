@@ -163,11 +163,11 @@ class _Challenges extends StatelessWidget {
   final List<ChallengeReadBrief> _challenges;
 
   void _openChallengePage(BuildContext context, String challengeName) {
-    context.go('/challenge/$challengeName');
+    context.push('/challenge/$challengeName');
   }
 
   void _openChallengeCreatePage(BuildContext context) {
-    context.go('/challenge_create');
+    context.push('/challenge_create');
   }
 
   Widget _buildChallenge(BuildContext context, ChallengeReadBrief challenge) {

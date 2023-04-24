@@ -14,26 +14,36 @@ class PageLayout extends StatelessWidget {
   final String title;
   final Widget child;
 
+  void _goBack(BuildContext context) {
+    context.pop();
+  }
+
   void _openHomePage(BuildContext context) {
-    context.go('/');
+    context.push('/');
   }
 
   void _openProfilePage(BuildContext context) {
-    context.go('/profile/${context.read<SecureStorage>().userName}');
+    context.push('/profile/${context.read<SecureStorage>().userName}');
   }
 
   void _openSettingsPage(BuildContext context) {
-    context.go('/settings');
+    context.push('/settings');
   }
 
   void _openLoginPage(BuildContext context) {
-    context.go('/login');
+    context.push('/login');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: context.canPop()
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => _goBack(context),
+              )
+            : null,
         title: Text(title),
         actions: [
           PopupMenuButton(

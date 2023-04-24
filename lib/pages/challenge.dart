@@ -153,7 +153,7 @@ class _ChallengeViewState extends State<_ChallengeView> {
   Future<SubmissionRead>? _submissionResponse;
 
   void _openSubmissionsPage(BuildContext context) {
-    context.go('/submissions/${widget._challenge.name}');
+    context.push('/submissions/${widget._challenge.name}');
   }
 
   Future<SubmissionRead> _postSubmission() async {

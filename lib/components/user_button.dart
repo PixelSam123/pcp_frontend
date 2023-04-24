@@ -12,7 +12,7 @@ class UserButton extends StatelessWidget {
   final UserReadBrief _user;
 
   void _openProfilePage(BuildContext context) {
-    context.go('/profile/${_user.name}');
+    context.push('/profile/${_user.name}');
   }
 
   @override
