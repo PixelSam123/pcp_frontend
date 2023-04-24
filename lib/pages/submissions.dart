@@ -5,6 +5,7 @@ import 'package:pcp_frontend/components/page_layout.dart';
 import 'package:pcp_frontend/components/user_button.dart';
 import 'package:pcp_frontend/secure_storage.dart';
 import 'package:pcp_frontend/settings.dart';
+import 'package:pcp_frontend/sizes.dart';
 import 'package:pcp_frontend/types/submission.dart';
 import 'package:pcp_frontend/utils.dart';
 import 'package:provider/provider.dart';
@@ -82,10 +83,27 @@ class _SubmissionsView extends StatelessWidget {
       children: _submissions
           .map(
             (submission) => Card(
-              child: Column(children: [
-                UserButton(user: submission.user),
-                Text(submission.code),
-              ]),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  PadSize.md,
+                  PadSize.sm,
+                  PadSize.md,
+                  PadSize.md,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    UserButton(user: submission.user),
+                    Text(
+                      submission.code,
+                      style: const TextStyle(
+                        fontFamily: 'monospace',
+                        fontFamilyFallback: ['Consolas'],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           )
           .toList(),

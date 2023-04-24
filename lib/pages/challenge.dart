@@ -367,14 +367,32 @@ class _CommentsViewState extends State<_CommentsView> {
                 },
               ),
         const SizedBox(height: PadSize.md),
-        ...widget._comments.map(
-          (comment) => Card(
-            child: Column(children: [
-              UserButton(user: comment.user),
-              Text(comment.content),
-            ]),
+        IntrinsicWidth(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ...widget._comments.map(
+                (comment) => Card(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      PadSize.md,
+                      PadSize.sm,
+                      PadSize.md,
+                      PadSize.md,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        UserButton(user: comment.user),
+                        Text(comment.content),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            ],
           ),
-        )
+        ),
       ],
     );
   }
