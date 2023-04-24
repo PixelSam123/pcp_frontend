@@ -169,9 +169,6 @@ class _ChallengeViewState extends State<_ChallengeView> {
       failMessage: 'Failed to create submission for challenge',
       body: jsonEncode({
         'code': _codeToSubmit.text,
-        'result': 'PENDING',
-        'time': 0,
-        'memory': 0,
         'user_id': secureStorage.userId,
         'challenge_id': widget._challenge.id,
       }),
