@@ -30,7 +30,7 @@ class _ChallengeCreatePageState extends State<ChallengeCreatePage> {
     final secureStorage = context.read<SecureStorage>();
 
     final challengeResponse = await FetchUtils.post(
-      '${appSettings.serverUrl}/challenges/',
+      '${appSettings.serverUrl}/challenges',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${secureStorage.loginToken}',

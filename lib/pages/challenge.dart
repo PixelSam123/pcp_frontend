@@ -161,7 +161,7 @@ class _ChallengeViewState extends State<_ChallengeView> {
     final secureStorage = context.read<SecureStorage>();
 
     final submissionResponse = await FetchUtils.post(
-      '${appSettings.serverUrl}/submissions/',
+      '${appSettings.serverUrl}/submissions',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${secureStorage.loginToken}',
@@ -290,7 +290,7 @@ class _CommentsViewState extends State<_CommentsView> {
     final secureStorage = context.read<SecureStorage>();
 
     final commentResponse = await FetchUtils.post(
-      '${appSettings.serverUrl}/challenge_comments/',
+      '${appSettings.serverUrl}/challenge_comments',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${secureStorage.loginToken}',

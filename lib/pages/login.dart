@@ -55,7 +55,7 @@ class _CredentialsFormState extends State<_CredentialsForm> {
     final appSettings = context.read<AppSettings>();
 
     final tokenResponse = await FetchUtils.post(
-      '${appSettings.serverUrl}/token/',
+      '${appSettings.serverUrl}/token',
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       failMessage: 'Failed to fetch token (log in)',
       body: {
@@ -71,7 +71,7 @@ class _CredentialsFormState extends State<_CredentialsForm> {
     final appSettings = context.read<AppSettings>();
 
     final userResponse = await FetchUtils.post(
-      '${appSettings.serverUrl}/users/',
+      '${appSettings.serverUrl}/users',
       headers: {'Content-Type': 'application/json'},
       failMessage: 'Failed to create user',
       body: jsonEncode({
