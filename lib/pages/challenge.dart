@@ -204,6 +204,20 @@ class _ChallengeViewState extends State<_ChallengeView> {
   Widget build(BuildContext context) {
     return Column(children: [
       const SizedBox(height: PadSize.md),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Author:',
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          UserButton(
+            user: widget._challenge.user,
+            onPressed: () {},
+          ),
+        ],
+      ),
+      const SizedBox(height: PadSize.md),
       Text(widget._challenge.description),
       const SizedBox(height: PadSize.md),
       OutlinedButton(
