@@ -104,7 +104,7 @@ class _HomePageState extends State<HomePage> {
               return _Challenges(challenges: snapshot.data!);
             },
           ),
-          const SizedBox(height: PadSize.lg),
+          const SizedBox(height: PadSize.md),
         ],
       ),
     );
@@ -172,10 +172,17 @@ class _Challenges extends StatelessWidget {
 
   Widget _buildChallenge(BuildContext context, ChallengeReadBrief challenge) {
     return Padding(
-      padding: const EdgeInsets.all(PadSize.sm),
+      padding: const EdgeInsets.fromLTRB(0, PadSize.sm, 0, 0),
       child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(PadSize.xs),
+          side: BorderSide(
+            color: Theme.of(context).colorScheme.background,
+            width: 1.0,
+          ),
+        ),
         child: Padding(
-          padding: const EdgeInsets.all(PadSize.sm),
+          padding: const EdgeInsets.all(PadSize.md),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -232,23 +239,26 @@ class _Challenges extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: IntrinsicWidth(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox(height: PadSize.md),
-            Text(
-              'Challenges',
-              style: Theme.of(context).textTheme.titleLarge,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: PadSize.md),
-            OutlinedButton(
-              onPressed: () => _openChallengeCreatePage(context),
-              child: const Text('Create your own'),
-            ),
-            ..._challenges
-                .map((challenge) => _buildChallenge(context, challenge)),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(PadSize.sm),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: PadSize.sm),
+              Text(
+                'Challenges',
+                style: Theme.of(context).textTheme.titleLarge,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: PadSize.lg),
+              OutlinedButton(
+                onPressed: () => _openChallengeCreatePage(context),
+                child: const Text('Create your own'),
+              ),
+              ..._challenges
+                  .map((challenge) => _buildChallenge(context, challenge)),
+            ],
+          ),
         ),
       ),
     );
