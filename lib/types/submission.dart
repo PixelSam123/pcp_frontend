@@ -3,23 +3,14 @@ import 'user.dart';
 abstract class _SubmissionBase {
   const _SubmissionBase({
     required this.code,
-    required this.result,
-    required this.time,
-    required this.memory,
   });
 
   final String code;
-  final String result;
-  final int time;
-  final int memory;
 }
 
 class SubmissionCreate extends _SubmissionBase {
   const SubmissionCreate({
     required super.code,
-    required super.result,
-    required super.time,
-    required super.memory,
     required this.userId,
     required this.challengeId,
   });
@@ -31,9 +22,6 @@ class SubmissionCreate extends _SubmissionBase {
 class SubmissionRead extends _SubmissionBase {
   const SubmissionRead({
     required super.code,
-    required super.result,
-    required super.time,
-    required super.memory,
     required this.id,
     required this.challengeId,
     required this.user,
@@ -46,9 +34,6 @@ class SubmissionRead extends _SubmissionBase {
   factory SubmissionRead.fromJson(Map<String, dynamic> json) {
     return SubmissionRead(
       code: json['code'],
-      result: json['result'],
-      time: json['time'],
-      memory: json['memory'],
       id: json['id'],
       challengeId: json['challenge_id'],
       user: UserReadBrief.fromJson(json['user']),
