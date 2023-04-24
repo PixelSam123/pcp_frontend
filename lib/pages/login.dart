@@ -20,7 +20,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PageLayout(
-      title: 'Login',
+      title: 'Login/Sign Up',
       child: Column(children: [
         context.select((SecureStorage s) => s.loginToken) == null
             ? const _CredentialsForm()
@@ -49,6 +49,7 @@ class _CredentialsFormState extends State<_CredentialsForm> {
   final _password = TextEditingController();
 
   Future<AccessTokenResponse>? _tokenResponse;
+  Future<UserReadBrief>? _userResponse;
 
   Future<AccessTokenResponse> _fetchToken() async {
     final appSettings = context.read<AppSettings>();
@@ -66,6 +67,22 @@ class _CredentialsFormState extends State<_CredentialsForm> {
     return AccessTokenResponse.fromJson(jsonDecode(tokenResponse));
   }
 
+  Future<UserReadBrief> _postUser() async {
+    final appSettings = context.read<AppSettings>();
+
+    final userResponse = await FetchUtils.post(
+      '${appSettings.serverUrl}/users/',
+      headers: {'Content-Type': 'application/json'},
+      failMessage: 'Failed to create user',
+      body: jsonEncode({
+        'name': _username.text,
+        'password': _password.text,
+      }),
+    );
+
+    return UserReadBrief.fromJson(jsonDecode(userResponse));
+  }
+
   Future<void> _login() async {
     final token = _fetchToken();
     setState(() {
@@ -77,6 +94,16 @@ class _CredentialsFormState extends State<_CredentialsForm> {
 
     secureStorage.loginToken = accessToken;
     secureStorage.userId = int.parse(JwtDecoder.decode(accessToken)['sub']);
+  }
+
+  Future<void> _signUp() async {
+    final user = _postUser();
+    setState(() {
+      _userResponse = user;
+    });
+
+    await user;
+    await _login();
   }
 
   @override
@@ -94,6 +121,7 @@ class _CredentialsFormState extends State<_CredentialsForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          const SizedBox(height: PadSize.md),
           TextField(
             controller: _username,
             decoration: const InputDecoration(
@@ -118,6 +146,11 @@ class _CredentialsFormState extends State<_CredentialsForm> {
             child: const Text('Login'),
           ),
           const SizedBox(height: PadSize.md),
+          OutlinedButton(
+            onPressed: _signUp,
+            child: const Text('Sign Up'),
+          ),
+          const SizedBox(height: PadSize.md),
           _tokenResponse == null
               ? const Text('Waiting for login...')
               : FutureBuilder(
@@ -131,6 +164,22 @@ class _CredentialsFormState extends State<_CredentialsForm> {
                     }
 
                     return const Text('You are logged in!');
+                  },
+                ),
+          const SizedBox(height: PadSize.sm),
+          _userResponse == null
+              ? const Text('Waiting for sign up...')
+              : FutureBuilder(
+                  future: _userResponse,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text(snapshot.error.toString());
+                    }
+                    if (!snapshot.hasData) {
+                      return const Text('Signing up...');
+                    }
+
+                    return const Text('You are signed up!');
                   },
                 ),
         ],
