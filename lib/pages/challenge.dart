@@ -208,6 +208,13 @@ class _ChallengeViewState extends State<_ChallengeView> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
+            'Tier:',
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          const SizedBox(width: PadSize.sm),
+          Text(widget._challenge.tier.toString()),
+          const SizedBox(width: PadSize.lg),
+          Text(
             'Author:',
             style: Theme.of(context).textTheme.bodySmall,
           ),
