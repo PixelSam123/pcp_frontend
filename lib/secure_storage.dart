@@ -10,6 +10,7 @@ class SecureStorage with ChangeNotifier {
   // final FlutterSecureStorage _storage;
   String? _loginToken;
   int? _userId;
+  String? _userName;
 
   static Future<SecureStorage> load() async {
     // final underlyingStorage = FlutterSecureStorage();
@@ -23,10 +24,13 @@ class SecureStorage with ChangeNotifier {
   String? get loginToken => _loginToken;
   set loginToken(String? value) {
     _loginToken = value;
+
     _userId = value != null ? int.parse(JwtDecoder.decode(value)['sub']) : null;
+    _userName = value != null ? JwtDecoder.decode(value)['name'] : null;
     notifyListeners();
     // _storage.write(key: 'loginToken', value: _loginToken);
   }
 
   int? get userId => _userId;
+  String? get userName => _userName;
 }
