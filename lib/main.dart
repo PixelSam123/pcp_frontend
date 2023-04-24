@@ -17,43 +17,6 @@ void main() {
   runApp(const MyApp());
 }
 
-final _router = GoRouter(routes: [
-  GoRoute(
-    path: '/',
-    builder: (context, state) => HomePage(key: state.pageKey),
-  ),
-  GoRoute(
-    path: '/profile',
-    builder: (context, state) => ProfilePage(key: state.pageKey),
-  ),
-  GoRoute(
-    path: '/settings',
-    builder: (context, state) => SettingsPage(key: state.pageKey),
-  ),
-  GoRoute(
-    path: '/login',
-    builder: (context, state) => LoginPage(key: state.pageKey),
-  ),
-  GoRoute(
-    path: '/challenge_create',
-    builder: (context, state) => ChallengeCreatePage(key: state.pageKey),
-  ),
-  GoRoute(
-    path: '/challenge/:challengeName',
-    builder: (context, state) => ChallengePage(
-      key: state.pageKey,
-      challengeName: state.params['challengeName']!,
-    ),
-  ),
-  GoRoute(
-    path: '/submissions/:challengeName',
-    builder: (context, state) => SubmissionsPage(
-      key: state.pageKey,
-      challengeName: state.params['challengeName']!,
-    ),
-  ),
-]);
-
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -62,7 +25,44 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _appSettings = Future.wait([
+  final _router = GoRouter(routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) => HomePage(key: state.pageKey),
+    ),
+    GoRoute(
+      path: '/profile',
+      builder: (context, state) => ProfilePage(key: state.pageKey),
+    ),
+    GoRoute(
+      path: '/settings',
+      builder: (context, state) => SettingsPage(key: state.pageKey),
+    ),
+    GoRoute(
+      path: '/login',
+      builder: (context, state) => LoginPage(key: state.pageKey),
+    ),
+    GoRoute(
+      path: '/challenge_create',
+      builder: (context, state) => ChallengeCreatePage(key: state.pageKey),
+    ),
+    GoRoute(
+      path: '/challenge/:challengeName',
+      builder: (context, state) => ChallengePage(
+        key: state.pageKey,
+        challengeName: state.params['challengeName']!,
+      ),
+    ),
+    GoRoute(
+      path: '/submissions/:challengeName',
+      builder: (context, state) => SubmissionsPage(
+        key: state.pageKey,
+        challengeName: state.params['challengeName']!,
+      ),
+    ),
+  ]);
+
+  final _appStoredResources = Future.wait([
     AppSettings.load(),
     SecureStorage.load(),
   ]);
@@ -70,7 +70,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _appSettings,
+      future: _appStoredResources,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const Directionality(
@@ -90,6 +90,7 @@ class _MyAppState extends State<MyApp> {
           ],
           builder: (context, child) {
             return MaterialApp.router(
+              routerConfig: _router,
               debugShowCheckedModeBanner: false,
               builder: (context, child) => MediaQuery(
                 data: MediaQuery.of(context).copyWith(
@@ -104,7 +105,6 @@ class _MyAppState extends State<MyApp> {
                     : Brightness.light,
                 primarySwatch: Colors.teal,
               ),
-              routerConfig: _router,
             );
           },
         );

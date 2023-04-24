@@ -5,7 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:pcp_frontend/components.dart';
 import 'package:pcp_frontend/settings.dart';
 import 'package:pcp_frontend/sizes.dart';
-import 'package:pcp_frontend/types.dart';
+import 'package:pcp_frontend/types/challenge.dart';
+import 'package:pcp_frontend/types/user.dart';
 import 'package:pcp_frontend/utils.dart';
 import 'package:provider/provider.dart';
 

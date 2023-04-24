@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pcp_frontend/sizes.dart';
-import 'package:pcp_frontend/types.dart';
+import 'package:pcp_frontend/types/user.dart';
 
 class UserButton extends StatelessWidget {
   const UserButton({

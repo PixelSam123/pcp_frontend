@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pcp_frontend/components.dart';
 import 'package:pcp_frontend/secure_storage.dart';
 import 'package:pcp_frontend/settings.dart';
-import 'package:pcp_frontend/types.dart';
+import 'package:pcp_frontend/types/submission.dart';
 import 'package:pcp_frontend/utils.dart';
 import 'package:provider/provider.dart';
 

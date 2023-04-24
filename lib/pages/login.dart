@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:pcp_frontend/components.dart';
 import 'package:pcp_frontend/secure_storage.dart';
 import 'package:pcp_frontend/settings.dart';
 import 'package:pcp_frontend/sizes.dart';
-import 'package:pcp_frontend/types.dart';
+import 'package:pcp_frontend/types/user.dart';
+import 'package:pcp_frontend/types/access_token.dart';
 import 'package:pcp_frontend/utils.dart';
 import 'package:provider/provider.dart';
 
@@ -93,7 +93,6 @@ class _CredentialsFormState extends State<_CredentialsForm> {
     final accessToken = (await token).accessToken;
 
     secureStorage.loginToken = accessToken;
-    secureStorage.userId = int.parse(JwtDecoder.decode(accessToken)['sub']);
   }
 
   Future<void> _signUp() async {
