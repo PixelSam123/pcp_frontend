@@ -83,10 +83,7 @@ class _SubmissionsView extends StatelessWidget {
           .map(
             (submission) => Card(
               child: Column(children: [
-                UserButton(
-                  user: submission.user,
-                  onPressed: () {},
-                ),
+                UserButton(user: submission.user),
                 Text(submission.code),
               ]),
             ),

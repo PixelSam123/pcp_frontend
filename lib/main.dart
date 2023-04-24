@@ -31,10 +31,6 @@ class _MyAppState extends State<MyApp> {
       builder: (context, state) => HomePage(key: state.pageKey),
     ),
     GoRoute(
-      path: '/profile',
-      builder: (context, state) => ProfilePage(key: state.pageKey),
-    ),
-    GoRoute(
       path: '/settings',
       builder: (context, state) => SettingsPage(key: state.pageKey),
     ),
@@ -45,6 +41,13 @@ class _MyAppState extends State<MyApp> {
     GoRoute(
       path: '/challenge_create',
       builder: (context, state) => ChallengeCreatePage(key: state.pageKey),
+    ),
+    GoRoute(
+      path: '/profile/:userName',
+      builder: (context, state) => ProfilePage(
+        key: state.pageKey,
+        userName: state.params['userName']!,
+      ),
     ),
     GoRoute(
       path: '/challenge/:challengeName',

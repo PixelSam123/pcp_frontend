@@ -193,10 +193,7 @@ class _Challenges extends StatelessWidget {
               Wrap(
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
-                  UserButton(
-                    user: challenge.user,
-                    onPressed: () {},
-                  ),
+                  UserButton(user: challenge.user),
                   const SizedBox(width: PadSize.sm),
                   Row(
                     mainAxisSize: MainAxisSize.min,

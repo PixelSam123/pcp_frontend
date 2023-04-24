@@ -218,10 +218,7 @@ class _ChallengeViewState extends State<_ChallengeView> {
             'Author:',
             style: Theme.of(context).textTheme.bodySmall,
           ),
-          UserButton(
-            user: widget._challenge.user,
-            onPressed: () {},
-          ),
+          UserButton(user: widget._challenge.user),
         ],
       ),
       const SizedBox(height: PadSize.md),
@@ -373,10 +370,7 @@ class _CommentsViewState extends State<_CommentsView> {
         ...widget._comments.map(
           (comment) => Card(
             child: Column(children: [
-              UserButton(
-                user: comment.user,
-                onPressed: _sendPostRequest,
-              ),
+              UserButton(user: comment.user),
               Text(comment.content),
             ]),
           ),

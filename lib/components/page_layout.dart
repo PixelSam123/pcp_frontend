@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pcp_frontend/secure_storage.dart';
 import 'package:pcp_frontend/sizes.dart';
+import 'package:provider/provider.dart';
 
 class PageLayout extends StatelessWidget {
   const PageLayout({
@@ -17,7 +19,7 @@ class PageLayout extends StatelessWidget {
   }
 
   void _openProfilePage(BuildContext context) {
-    context.go('/profile');
+    context.go('/profile/${context.read<SecureStorage>().userName}');
   }
 
   void _openSettingsPage(BuildContext context) {

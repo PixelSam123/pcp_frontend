@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pcp_frontend/sizes.dart';
 import 'package:pcp_frontend/types/user.dart';
 
@@ -6,12 +7,13 @@ class UserButton extends StatelessWidget {
   const UserButton({
     super.key,
     required UserReadBrief user,
-    required VoidCallback onPressed,
-  })  : _user = user,
-        _onPressed = onPressed;
+  }) : _user = user;
 
   final UserReadBrief _user;
-  final VoidCallback _onPressed;
+
+  void _openProfilePage(BuildContext context) {
+    context.go('/profile/${_user.name}');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class UserButton extends StatelessWidget {
       message: 'Group: ${_user.group?.name ?? 'None'}\n'
           'Points: ${_user.points}',
       child: TextButton(
-        onPressed: _onPressed,
+        onPressed: () => _openProfilePage(context),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
