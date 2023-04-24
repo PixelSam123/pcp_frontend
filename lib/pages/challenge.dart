@@ -59,6 +59,12 @@ class _ChallengePageState extends State<ChallengePage>
         .toList();
   }
 
+  void _refreshComments() {
+    setState(() {
+      _comments = _fetchComments();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -93,33 +99,37 @@ class _ChallengePageState extends State<ChallengePage>
             Tab(text: 'Comments'),
           ],
         ),
-        _tabIndex == 0
-            ? FutureBuilder(
-                future: _challenge,
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Text(snapshot.error.toString());
-                  }
-                  if (!snapshot.hasData) {
-                    return const Text('Loading challenge information...');
-                  }
+        FutureBuilder(
+          future: _challenge,
+          builder: (context, challengeSnapshot) {
+            if (challengeSnapshot.hasError) {
+              return Text(challengeSnapshot.error.toString());
+            }
+            if (!challengeSnapshot.hasData) {
+              return const Text('Loading challenge information...');
+            }
 
-                  return _ChallengeView(challenge: snapshot.data!);
-                },
-              )
-            : FutureBuilder(
-                future: _comments,
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Text(snapshot.error.toString());
-                  }
-                  if (!snapshot.hasData) {
-                    return const Text('Loading challenge comments...');
-                  }
+            return _tabIndex == 0
+                ? _ChallengeView(challenge: challengeSnapshot.data!)
+                : FutureBuilder(
+                    future: _comments,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text(snapshot.error.toString());
+                      }
+                      if (!snapshot.hasData) {
+                        return const Text('Loading challenge comments...');
+                      }
 
-                  return _CommentsView(comments: snapshot.data!);
-                },
-              ),
+                      return _CommentsView(
+                        challengeId: challengeSnapshot.data!.id,
+                        comments: snapshot.data!,
+                        onCommentPosted: _refreshComments,
+                      );
+                    },
+                  );
+          },
+        ),
       ]),
     );
   }
@@ -236,28 +246,119 @@ class _ChallengeViewState extends State<_ChallengeView> {
   }
 }
 
-class _CommentsView extends StatelessWidget {
-  const _CommentsView({required List<ChallengeCommentRead> comments})
-      : _comments = comments;
+class _CommentsView extends StatefulWidget {
+  const _CommentsView({
+    required int challengeId,
+    required List<ChallengeCommentRead> comments,
+    required VoidCallback onCommentPosted,
+  })  : _challengeId = challengeId,
+        _comments = comments,
+        _onCommentPosted = onCommentPosted;
 
+  final int _challengeId;
   final List<ChallengeCommentRead> _comments;
+  final VoidCallback _onCommentPosted;
+
+  @override
+  State<_CommentsView> createState() => _CommentsViewState();
+}
+
+class _CommentsViewState extends State<_CommentsView> {
+  final _commentContent = TextEditingController();
+
+  Future<ChallengeCommentRead>? _commentResponse;
+
+  Future<ChallengeCommentRead> _postComment() async {
+    final appSettings = context.read<AppSettings>();
+    final secureStorage = context.read<SecureStorage>();
+
+    final commentResponse = await FetchUtils.post(
+      '${appSettings.serverUrl}/challenge_comments/',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${secureStorage.loginToken}',
+      },
+      failMessage: 'Failed to create comment for challenge',
+      body: jsonEncode({
+        'content': _commentContent.text,
+        'user_id': secureStorage.userId,
+        'challenge_id': widget._challengeId,
+      }),
+    );
+
+    return ChallengeCommentRead.fromJson(jsonDecode(commentResponse));
+  }
+
+  Future<void> _sendPostRequest() async {
+    final commentResponse = _postComment();
+    setState(() {
+      _commentResponse = commentResponse;
+    });
+
+    await commentResponse;
+    _commentContent.clear();
+    widget._onCommentPosted();
+  }
+
+  @override
+  void dispose() {
+    _commentContent.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: _comments
-          .map(
-            (comment) => Card(
-              child: Column(children: [
-                UserButton(
-                  user: comment.user,
-                  onPressed: () {},
-                ),
-                Text(comment.content),
-              ]),
-            ),
-          )
-          .toList(),
+      children: [
+        const SizedBox(height: PadSize.md),
+        TextField(
+          controller: _commentContent,
+          keyboardType: TextInputType.multiline,
+          minLines: 2,
+          maxLines: 4,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            isDense: true,
+            labelText: 'Write your comment',
+          ),
+        ),
+        const SizedBox(height: PadSize.md),
+        ElevatedButton(
+          onPressed: _sendPostRequest,
+          child: const Text('Submit'),
+        ),
+        const SizedBox(height: PadSize.md),
+        _commentResponse == null
+            ? const Text('No comment sent yet')
+            : FutureBuilder(
+                future: _commentResponse,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text(snapshot.error.toString());
+                  }
+                  if (!snapshot.hasData) {
+                    return const Text(
+                      'Submitting your comment for this challenge...',
+                    );
+                  }
+
+                  return const Text('Successfully created comment!');
+                },
+              ),
+        const SizedBox(height: PadSize.md),
+        ...widget._comments.map(
+          (comment) => Card(
+            child: Column(children: [
+              UserButton(
+                user: comment.user,
+                onPressed: _sendPostRequest,
+              ),
+              Text(comment.content),
+            ]),
+          ),
+        )
+      ],
     );
   }
 }
