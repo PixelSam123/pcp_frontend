@@ -11,6 +11,7 @@ import 'package:pcp_frontend/secure_storage.dart';
 import 'package:pcp_frontend/settings.dart';
 import 'package:pcp_frontend/sizes.dart';
 import 'package:pcp_frontend/types/challenge.dart';
+import 'package:pcp_frontend/types/challenge_comment.dart';
 import 'package:pcp_frontend/types/submission.dart';
 import 'package:pcp_frontend/utils.dart';
 import 'package:provider/provider.dart';
