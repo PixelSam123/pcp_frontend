@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_code_editor/flutter_code_editor.dart';
+import 'package:flutter_highlight/themes/ocean.dart';
+import 'package:highlight/languages/javascript.dart';
 import 'package:pcp_frontend/components/page_layout.dart';
 import 'package:pcp_frontend/secure_storage.dart';
 import 'package:pcp_frontend/settings.dart';
@@ -20,8 +23,8 @@ class _ChallengeCreatePageState extends State<ChallengeCreatePage> {
   final _name = TextEditingController();
   final _tier = TextEditingController();
   final _description = TextEditingController();
-  final _initialCode = TextEditingController();
-  final _testCase = TextEditingController();
+  final _initialCode = CodeController(language: javascript);
+  final _testCase = CodeController(language: javascript);
 
   Future<ChallengeRead>? _challengeResponse;
 
@@ -60,6 +63,8 @@ class _ChallengeCreatePageState extends State<ChallengeCreatePage> {
     _name.dispose();
     _tier.dispose();
     _description.dispose();
+    _initialCode.dispose();
+    _testCase.dispose();
 
     super.dispose();
   }
@@ -101,27 +106,27 @@ class _ChallengeCreatePageState extends State<ChallengeCreatePage> {
             ),
           ),
           const SizedBox(height: PadSize.md),
-          TextField(
-            controller: _initialCode,
-            keyboardType: TextInputType.multiline,
-            minLines: 2,
-            maxLines: 4,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              isDense: true,
-              labelText: 'Initial Code',
+          const Text('Initial Code'),
+          CodeTheme(
+            data: CodeThemeData(styles: oceanTheme),
+            child: CodeField(
+              controller: _initialCode,
+              textStyle: const TextStyle(
+                fontFamily: 'monospace',
+                fontFamilyFallback: ['Consolas'],
+              ),
             ),
           ),
           const SizedBox(height: PadSize.md),
-          TextField(
-            controller: _testCase,
-            keyboardType: TextInputType.multiline,
-            minLines: 2,
-            maxLines: 4,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              isDense: true,
-              labelText: 'Test Case',
+          const Text('Test Case'),
+          CodeTheme(
+            data: CodeThemeData(styles: oceanTheme),
+            child: CodeField(
+              controller: _testCase,
+              textStyle: const TextStyle(
+                fontFamily: 'monospace',
+                fontFamilyFallback: ['Consolas'],
+              ),
             ),
           ),
           const SizedBox(height: PadSize.md),
