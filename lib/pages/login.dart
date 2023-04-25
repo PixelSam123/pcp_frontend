@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pcp_frontend/components/page_layout.dart';
 import 'package:pcp_frontend/secure_storage.dart';
 import 'package:pcp_frontend/settings.dart';
 import 'package:pcp_frontend/sizes.dart';
-import 'package:pcp_frontend/types/user.dart';
 import 'package:pcp_frontend/types/access_token.dart';
 import 'package:pcp_frontend/utils.dart';
 import 'package:provider/provider.dart';
@@ -49,7 +49,6 @@ class _CredentialsFormState extends State<_CredentialsForm> {
   final _password = TextEditingController();
 
   Future<AccessTokenResponse>? _tokenResponse;
-  Future<UserReadBrief>? _userResponse;
 
   Future<AccessTokenResponse> _fetchToken() async {
     final appSettings = context.read<AppSettings>();
@@ -67,10 +66,10 @@ class _CredentialsFormState extends State<_CredentialsForm> {
     return AccessTokenResponse.fromJson(jsonDecode(tokenResponse));
   }
 
-  Future<UserReadBrief> _postUser() async {
+  Future<void> _postUser() async {
     final appSettings = context.read<AppSettings>();
 
-    final userResponse = await FetchUtils.post(
+    await FetchUtils.post(
       '${appSettings.serverUrl}/users',
       headers: {'Content-Type': 'application/json'},
       failMessage: 'Failed to create user',
@@ -79,8 +78,6 @@ class _CredentialsFormState extends State<_CredentialsForm> {
         'password': _password.text,
       }),
     );
-
-    return UserReadBrief.fromJson(jsonDecode(userResponse));
   }
 
   Future<void> _login() async {
@@ -96,13 +93,24 @@ class _CredentialsFormState extends State<_CredentialsForm> {
   }
 
   Future<void> _signUp() async {
-    final user = _postUser();
-    setState(() {
-      _userResponse = user;
-    });
-
-    await user;
-    await _login();
+    try {
+      await _postUser();
+      await _login();
+    } catch (err) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: Text(err.toString()),
+          actions: [
+            TextButton(
+              onPressed: () => context.pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   @override
@@ -163,22 +171,6 @@ class _CredentialsFormState extends State<_CredentialsForm> {
                     }
 
                     return const Text('You are logged in!');
-                  },
-                ),
-          const SizedBox(height: PadSize.sm),
-          _userResponse == null
-              ? const Text('Waiting for sign up...')
-              : FutureBuilder(
-                  future: _userResponse,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Text(snapshot.error.toString());
-                    }
-                    if (!snapshot.hasData) {
-                      return const Text('Signing up...');
-                    }
-
-                    return const Text('You are signed up!');
                   },
                 ),
         ],
