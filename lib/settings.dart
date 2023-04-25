@@ -23,7 +23,8 @@ class AppSettings with ChangeNotifier {
     return AppSettings._create(
       prefs: prefs,
       isDarkMode: prefs.getBool('isDarkMode') ?? true,
-      serverUrl: prefs.getString('serverUrl') ?? 'http://localhost:8000',
+      serverUrl:
+          prefs.getString('serverUrl') ?? 'https://pcp.azurewebsites.net',
       textScale: prefs.getDouble('textScale') ?? 1.0,
     );
   }
