@@ -249,7 +249,13 @@ class _ChallengeViewState extends State<_ChallengeView> {
               future: _submissionResponse,
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return Text(snapshot.error.toString());
+                  return Text(
+                    snapshot.error.toString().replaceAll('\\n', '\n'),
+                    style: const TextStyle(
+                      fontFamily: 'monospace',
+                      fontFamilyFallback: ['Consolas'],
+                    ),
+                  );
                 }
                 if (!snapshot.hasData) {
                   return const Text(
