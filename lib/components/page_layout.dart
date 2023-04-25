@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pcp_frontend/secure_storage.dart';
@@ -38,7 +39,7 @@ class PageLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: context.canPop()
+        leading: !kIsWeb && context.canPop()
             ? IconButton(
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () => _goBack(context),
