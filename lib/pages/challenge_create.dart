@@ -112,8 +112,8 @@ class _ChallengeCreatePageState extends State<ChallengeCreatePage> {
             child: CodeField(
               controller: _initialCode,
               textStyle: const TextStyle(
-                fontFamily: 'monospace',
-                fontFamilyFallback: ['Consolas'],
+                fontFamily: 'Roboto Mono',
+                fontFamilyFallback: ['Consolas', 'monospace'],
               ),
             ),
           ),
@@ -124,8 +124,8 @@ class _ChallengeCreatePageState extends State<ChallengeCreatePage> {
             child: CodeField(
               controller: _testCase,
               textStyle: const TextStyle(
-                fontFamily: 'monospace',
-                fontFamilyFallback: ['Consolas'],
+                fontFamily: 'Roboto Mono',
+                fontFamilyFallback: ['Consolas', 'monospace'],
               ),
             ),
           ),

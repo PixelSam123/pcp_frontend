@@ -97,8 +97,8 @@ class _SubmissionsView extends StatelessWidget {
                     Text(
                       submission.code,
                       style: const TextStyle(
-                        fontFamily: 'monospace',
-                        fontFamilyFallback: ['Consolas'],
+                        fontFamily: 'Roboto Mono',
+                        fontFamilyFallback: ['Consolas', 'monospace'],
                       ),
                     ),
                   ],

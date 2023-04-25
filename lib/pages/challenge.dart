@@ -232,8 +232,8 @@ class _ChallengeViewState extends State<_ChallengeView> {
         child: CodeField(
           controller: _codeToSubmit,
           textStyle: const TextStyle(
-            fontFamily: 'monospace',
-            fontFamilyFallback: ['Consolas'],
+            fontFamily: 'Roboto Mono',
+            fontFamilyFallback: ['Consolas', 'monospace'],
           ),
         ),
       ),
@@ -252,8 +252,8 @@ class _ChallengeViewState extends State<_ChallengeView> {
                   return Text(
                     snapshot.error.toString().replaceAll('\\n', '\n'),
                     style: const TextStyle(
-                      fontFamily: 'monospace',
-                      fontFamilyFallback: ['Consolas'],
+                      fontFamily: 'Roboto Mono',
+                      fontFamilyFallback: ['Consolas', 'monospace'],
                     ),
                   );
                 }
